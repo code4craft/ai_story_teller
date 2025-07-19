@@ -29,6 +29,9 @@ router.post('/', validateCharacter, characterController.createCharacter);
 // PUT /api/characters/:id - 更新角色
 router.put('/:id', validateCharacter, characterController.updateCharacter);
 
+// PATCH /api/characters/:id/voice - 更新角色配音
+router.patch('/:id/voice', characterController.updateCharacterVoice);
+
 // DELETE /api/characters/:id - 删除角色
 router.delete('/:id', characterController.deleteCharacter);
 

@@ -36,12 +36,16 @@ import {
   UserOutlined,
   MessageOutlined,
   BarChartOutlined,
+  SoundOutlined,
+  LoadingOutlined,
+  SwapOutlined,
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 // import MonacoEditor from '@monaco-editor/react';
 import storyService from '../services/storyService';
 import characterService from '../services/characterService';
+import voiceService from '../services/voiceService';
 import { Chapter, Character, Voice } from '../types/api';
 import { parseScript, generateScriptStats, validateScriptFormat, ParsedDialogue } from '../utils/scriptParser';
 
@@ -64,8 +68,16 @@ const ChapterDetail: React.FC = () => {
   const [activeTab, setActiveTab] = useState('edit');
   const [scriptStats, setScriptStats] = useState<any>(null);
   const [formatValidation, setFormatValidation] = useState<any>(null);
+  const [generatingAudio, setGeneratingAudio] = useState<Set<number>>(new Set());
+  const [isVoiceModalVisible, setIsVoiceModalVisible] = useState(false);
+  const [selectedCharacterForVoiceUpdate, setSelectedCharacterForVoiceUpdate] = useState<Character | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<number | null>(null);
+  const [isCreateCharacterModalVisible, setIsCreateCharacterModalVisible] = useState(false);
+  const [pendingCharacterName, setPendingCharacterName] = useState<string>('');
 
   const [form] = Form.useForm();
+  const [voiceForm] = Form.useForm();
+  const [createCharacterForm] = Form.useForm();
 
   // 查询章节详情
   const { data: chapterData, isLoading: isLoadingChapter } = useQuery(
@@ -100,6 +112,34 @@ const ChapterDetail: React.FC = () => {
     }
   );
 
+  // 查询所有音色（用于配音更新）
+  const { data: voicesData } = useQuery(
+    ['voices-for-voice-update'],
+    () => import('../services/voiceService').then(mod => mod.default.getVoices({ limit: 1000 })),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  // 查询当前章节的故事系列信息
+  const { data: storySeriesData } = useQuery(
+    ['story-series', seriesId],
+    () => storyService.getStorySeriesById(seriesId!),
+    {
+      enabled: !!seriesId,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  // 查询故事系列列表（用于新建角色时选择）
+  const { data: allStorySeriesData } = useQuery(
+    ['all-story-series'],
+    () => characterService.getStorySeries(),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
   // 更新章节
   const updateChapterMutation = useMutation(
     (data: any) => storyService.updateChapter(chapterId!, data),
@@ -121,6 +161,98 @@ const ChapterDetail: React.FC = () => {
           setParsedDialogues(data.data.dialogues || []);
           message.success('内容解析成功');
         }
+      },
+    }
+  );
+
+  // 生成对话音频
+  const generateDialogueAudioMutation = useMutation(
+    (data: { text: string; characterId: string; voiceId?: string; index: number }) =>
+      storyService.generateDialogueAudio({
+        text: data.text,
+        characterId: data.characterId,
+        voiceId: data.voiceId,
+      }).then(blob => ({ blob, index: data.index })),
+    {
+      onSuccess: ({ blob, index }) => {
+        // 创建音频URL并播放
+        const audioUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioUrl);
+        
+        setPlayingAudio(index);
+        audio.onended = () => {
+          setPlayingAudio(null);
+          URL.revokeObjectURL(audioUrl);
+        };
+        
+        audio.play().catch((error) => {
+          console.error('音频播放失败:', error);
+          message.error('音频播放失败');
+          setPlayingAudio(null);
+        });
+        
+        setGeneratingAudio(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
+      },
+      onError: (error, variables) => {
+        console.error('音频生成失败:', error);
+        message.error('音频生成失败');
+        setGeneratingAudio(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(variables.index);
+          return newSet;
+        });
+      },
+    }
+  );
+
+  // 更新角色配音
+  const updateCharacterVoiceMutation = useMutation(
+    ({ characterId, voiceId }: { characterId: string; voiceId: string }) =>
+      characterService.updateCharacterVoice(characterId, voiceId),
+    {
+      onSuccess: () => {
+        message.success('配音更新成功');
+        queryClient.invalidateQueries(['characters-for-chapter']);
+        setIsVoiceModalVisible(false);
+        setSelectedCharacterForVoiceUpdate(null);
+        voiceForm.resetFields();
+      },
+      onError: () => {
+        message.error('配音更新失败');
+      },
+    }
+  );
+
+  // 创建新角色
+  const createCharacterMutation = useMutation(
+    characterService.createCharacter,
+    {
+      onSuccess: (response) => {
+        message.success('角色创建成功');
+        queryClient.invalidateQueries(['characters-for-chapter']);
+        
+        // 自动将新创建的角色与当前剧本角色关联
+        if (pendingCharacterName && response?.data?._id) {
+          const newCharacterId = response.data._id;
+          setCharacterMapping(prev => ({
+            ...prev,
+            [pendingCharacterName]: newCharacterId
+          }));
+          if (!selectedCharacters.includes(newCharacterId)) {
+            setSelectedCharacters(prev => [...prev, newCharacterId]);
+          }
+        }
+        
+        setIsCreateCharacterModalVisible(false);
+        setPendingCharacterName('');
+        createCharacterForm.resetFields();
+      },
+      onError: () => {
+        message.error('角色创建失败');
       },
     }
   );
@@ -210,6 +342,81 @@ const ChapterDetail: React.FC = () => {
       });
     } else {
       message.warning('该音色没有样本音频');
+    }
+  };
+
+  // 生成并播放对话音频
+  const handleGenerateDialogueAudio = (dialogue: ParsedDialogue, index: number) => {
+    const mappedCharacterId = characterMapping[dialogue.character];
+    const character = charactersData?.data?.find(char => char._id === mappedCharacterId);
+    
+    if (!character) {
+      message.warning('请先为角色选择配音');
+      return;
+    }
+    
+    const voice = character.voice_id as Voice;
+    if (!voice || typeof voice !== 'object') {
+      message.warning('该角色没有配置配音');
+      return;
+    }
+    
+    setGeneratingAudio(prev => new Set(prev).add(index));
+    generateDialogueAudioMutation.mutate({
+      text: dialogue.text,
+      characterId: character._id,
+      voiceId: voice._id,
+      index,
+    });
+  };
+
+  // 打开配音更换对话框
+  const handleOpenVoiceModal = (character: Character) => {
+    setSelectedCharacterForVoiceUpdate(character);
+    setIsVoiceModalVisible(true);
+    
+    const currentVoice = character.voice_id as Voice;
+    voiceForm.setFieldsValue({
+      voice_id: currentVoice && typeof currentVoice === 'object' ? currentVoice._id : undefined,
+    });
+  };
+
+  // 提交配音更换
+  const handleVoiceUpdate = async () => {
+    if (!selectedCharacterForVoiceUpdate) return;
+    
+    try {
+      const values = await voiceForm.validateFields();
+      updateCharacterVoiceMutation.mutate({
+        characterId: selectedCharacterForVoiceUpdate._id,
+        voiceId: values.voice_id,
+      });
+    } catch (error) {
+      // 表单验证失败
+    }
+  };
+
+  // 处理新建角色
+  const handleCreateNewCharacter = (scriptCharacterName: string) => {
+    setPendingCharacterName(scriptCharacterName);
+    setIsCreateCharacterModalVisible(true);
+    
+    // 设置默认值
+    createCharacterForm.setFieldsValue({
+      name: scriptCharacterName,
+      story_series: storySeriesData?.data?.title || '',
+      gender: 'neutral',
+      age_type: 'adult',
+    });
+  };
+
+  // 提交新建角色
+  const handleCreateCharacterSubmit = async () => {
+    try {
+      const values = await createCharacterForm.validateFields();
+      createCharacterMutation.mutate(values);
+    } catch (error) {
+      // 表单验证失败
     }
   };
 
@@ -348,39 +555,58 @@ const ChapterDetail: React.FC = () => {
                   }
                 />
                 <div>
-                  {voice && typeof voice === 'object' && voice.sample_audio?.url && (
-                    <Button
-                      type="link"
-                      icon={<PlayCircleOutlined />}
-                      onClick={() => playVoiceSample(voice)}
-                      size="small"
-                    >
-                      试听
-                    </Button>
-                  )}
-                  {!isMatched && (
-                    <Select
-                      placeholder="选择角色"
-                      style={{ width: 120, marginLeft: 8 }}
-                      size="small"
-                      value={mappedCharacterId}
-                      onChange={(characterId) => {
-                        setCharacterMapping(prev => ({
-                          ...prev,
-                          [dialogue.character]: characterId
-                        }));
-                        if (!selectedCharacters.includes(characterId)) {
-                          setSelectedCharacters(prev => [...prev, characterId]);
-                        }
-                      }}
-                    >
-                      {charactersData?.data?.map(char => (
-                        <Option key={char._id} value={char._id}>
-                          {char.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
+                  <Space>
+                    {/* 样本试听 */}
+                    {voice && typeof voice === 'object' && voice.sample_audio?.url && (
+                      <Button
+                        type="link"
+                        icon={<PlayCircleOutlined />}
+                        onClick={() => playVoiceSample(voice)}
+                        size="small"
+                      >
+                        样本
+                      </Button>
+                    )}
+                    
+                    {/* 对话试听 */}
+                    {isMatched && (
+                      <Button
+                        type="link"
+                        icon={generatingAudio.has(index) ? <LoadingOutlined /> : <SoundOutlined />}
+                        onClick={() => handleGenerateDialogueAudio(dialogue, index)}
+                        size="small"
+                        loading={generatingAudio.has(index)}
+                        disabled={playingAudio === index}
+                      >
+                        {playingAudio === index ? '播放中' : '试听'}
+                      </Button>
+                    )}
+                    
+                    {/* 角色选择 */}
+                    {!isMatched && (
+                      <Select
+                        placeholder="选择角色"
+                        style={{ width: 120 }}
+                        size="small"
+                        value={mappedCharacterId}
+                        onChange={(characterId) => {
+                          setCharacterMapping(prev => ({
+                            ...prev,
+                            [dialogue.character]: characterId
+                          }));
+                          if (!selectedCharacters.includes(characterId)) {
+                            setSelectedCharacters(prev => [...prev, characterId]);
+                          }
+                        }}
+                      >
+                        {charactersData?.data?.map(char => (
+                          <Option key={char._id} value={char._id}>
+                            {char.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  </Space>
                 </div>
               </List.Item>
             );
@@ -557,14 +783,26 @@ const ChapterDetail: React.FC = () => {
                               <Text strong>{scriptChar}</Text>
                               <Badge count={dialogueCount} size="small" />
                             </Space>
-                            {voice && typeof voice === 'object' && voice.sample_audio?.url && (
-                              <Button
-                                type="link"
-                                icon={<PlayCircleOutlined />}
-                                onClick={() => playVoiceSample(voice)}
-                                size="small"
-                              />
-                            )}
+                            <Space size={4}>
+                              {voice && typeof voice === 'object' && voice.sample_audio?.url && (
+                                <Button
+                                  type="link"
+                                  icon={<PlayCircleOutlined />}
+                                  onClick={() => playVoiceSample(voice)}
+                                  size="small"
+                                />
+                              )}
+                              {isMatched && character && (
+                                <Button
+                                  type="link"
+                                  icon={<SwapOutlined />}
+                                  onClick={() => handleOpenVoiceModal(character)}
+                                  size="small"
+                                >
+                                  换音
+                                </Button>
+                              )}
+                            </Space>
                           </div>
                           
                           {isMatched ? (
@@ -585,6 +823,10 @@ const ChapterDetail: React.FC = () => {
                                 size="small"
                                 value={mappedCharacterId}
                                 onChange={(characterId) => {
+                                  if (characterId === 'CREATE_NEW') {
+                                    handleCreateNewCharacter(scriptChar);
+                                    return;
+                                  }
                                   setCharacterMapping(prev => ({
                                     ...prev,
                                     [scriptChar]: characterId
@@ -601,6 +843,20 @@ const ChapterDetail: React.FC = () => {
                                     return newMapping;
                                   });
                                 }}
+                                dropdownRender={(menu) => (
+                                  <>
+                                    {menu}
+                                    <Divider style={{ margin: '8px 0' }} />
+                                    <Button
+                                      type="text"
+                                      icon={<PlusOutlined />}
+                                      style={{ width: '100%', textAlign: 'left' }}
+                                      onClick={() => handleCreateNewCharacter(scriptChar)}
+                                    >
+                                      新建角色 "{scriptChar}"
+                                    </Button>
+                                  </>
+                                )}
                               >
                                 {charactersData?.data?.map(char => (
                                   <Option key={char._id} value={char._id}>
@@ -680,6 +936,198 @@ const ChapterDetail: React.FC = () => {
             </Option>
           ))}
         </Select>
+      </Modal>
+
+      {/* 配音更换对话框 */}
+      <Modal
+        title={`为 ${selectedCharacterForVoiceUpdate?.name} 更换配音`}
+        open={isVoiceModalVisible}
+        onOk={handleVoiceUpdate}
+        onCancel={() => {
+          setIsVoiceModalVisible(false);
+          setSelectedCharacterForVoiceUpdate(null);
+          voiceForm.resetFields();
+        }}
+        confirmLoading={updateCharacterVoiceMutation.isLoading}
+      >
+        <Alert
+          message="注意"
+          description="更换配音会全局应用到该角色的所有对话中。"
+          type="warning"
+          showIcon
+          style={{ marginBottom: 16 }}
+        />
+        
+        <Form
+          form={voiceForm}
+          layout="vertical"
+        >
+          <Form.Item
+            name="voice_id"
+            label="选择音色"
+            rules={[{ required: true, message: '请选择音色' }]}
+          >
+            <Select
+              placeholder="选择新的音色"
+              optionFilterProp="children"
+              showSearch
+            >
+              {voicesData?.data?.map((voice: Voice) => (
+                <Option key={voice._id} value={voice._id}>
+                  <Space>
+                    <Text>{voice.name}</Text>
+                    <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
+                      {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
+                    </Tag>
+                    {voice.sample_audio?.url && (
+                      <Button
+                        type="link"
+                        icon={<PlayCircleOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playVoiceSample(voice);
+                        }}
+                        size="small"
+                      >
+                        试听
+                      </Button>
+                    )}
+                  </Space>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* 新建角色对话框 */}
+      <Modal
+        title={`新建角色 "${pendingCharacterName}"`}
+        open={isCreateCharacterModalVisible}
+        onOk={handleCreateCharacterSubmit}
+        onCancel={() => {
+          setIsCreateCharacterModalVisible(false);
+          setPendingCharacterName('');
+          createCharacterForm.resetFields();
+        }}
+        confirmLoading={createCharacterMutation.isLoading}
+        width={600}
+      >
+        <Form
+          form={createCharacterForm}
+          layout="vertical"
+        >
+          <Form.Item
+            name="name"
+            label="角色名称"
+            rules={[{ required: true, message: '请输入角色名称' }]}
+          >
+            <Input placeholder="角色名称" />
+          </Form.Item>
+
+          <Form.Item
+            name="gender"
+            label="性别"
+            rules={[{ required: true, message: '请选择性别' }]}
+          >
+            <Select placeholder="选择性别">
+              <Option value="male">男</Option>
+              <Option value="female">女</Option>
+              <Option value="mixed">混合</Option>
+              <Option value="neutral">中性</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="age_type"
+            label="年龄类型"
+            rules={[{ required: true, message: '请输入年龄类型' }]}
+          >
+            <Select placeholder="选择年龄类型">
+              <Option value="child">儿童</Option>
+              <Option value="young_adult">青少年</Option>
+              <Option value="adult">成年人</Option>
+              <Option value="middle_aged">中年人</Option>
+              <Option value="elderly">老年人</Option>
+              <Option value="narrator">旁白</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="voice_id"
+            label="配音音色"
+            rules={[{ required: true, message: '请选择配音音色' }]}
+          >
+            <Select 
+              placeholder="选择音色"
+              showSearch
+              filterOption={(input, option) =>
+                option?.children?.toString().toLowerCase().includes(input.toLowerCase()) ?? false
+              }
+            >
+              {voicesData?.data?.map(voice => (
+                <Option key={voice._id} value={voice._id}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Space>
+                      <span>{voice.name}</span>
+                      <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
+                        {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
+                      </Tag>
+                    </Space>
+                    {voice.sample_audio?.url && (
+                      <Button
+                        type="link"
+                        size="small"
+                        icon={<PlayCircleOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playVoiceSample(voice);
+                        }}
+                        title="试听音色样本"
+                      />
+                    )}
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="story_series"
+            label="故事系列"
+          >
+            <Select 
+              placeholder="选择故事系列"
+              allowClear
+            >
+              {allStorySeriesData?.map(series => (
+                <Option key={series} value={series}>{series}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="personality"
+            label="性格特点"
+          >
+            <Select
+              mode="tags"
+              placeholder="输入性格特点，按回车添加"
+              style={{ width: '100%' }}
+            >
+              <Option value="温和">温和</Option>
+              <Option value="活泼">活泼</Option>
+              <Option value="聪明">聪明</Option>
+              <Option value="善良">善良</Option>
+              <Option value="勇敢">勇敢</Option>
+              <Option value="调皮">调皮</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item name="description" label="角色描述">
+            <TextArea rows={3} placeholder="描述角色的背景、特征等" />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

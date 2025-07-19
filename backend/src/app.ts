@@ -18,6 +18,7 @@ import characterRoutes from './routes/characters';
 import storyRoutes from './routes/stories';
 import chapterRoutes from './routes/chapters';
 import conversionRoutes from './routes/conversions';
+import ttsRoutes from './routes/tts';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,6 +45,14 @@ app.use('/audio/voices', (req, res, next) => {
   next();
 }, express.static('uploads/voices'));
 
+app.use('/audio/chapters', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static('uploads/audio/chapters'));
+
 app.use('/audio', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:3000');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
@@ -58,6 +67,7 @@ app.use('/api/characters', characterRoutes);
 app.use('/api/stories', storyRoutes);
 app.use('/api/chapters', chapterRoutes);
 app.use('/api/conversions', conversionRoutes);
+app.use('/api/tts', ttsRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {

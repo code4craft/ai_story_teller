@@ -175,4 +175,30 @@ export class CharacterController {
       data: validCategories.sort()
     });
   });
+
+  // 更新角色配音
+  updateCharacterVoice = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { voice_id } = req.body;
+
+    if (!voice_id) {
+      throw createError('音色ID是必需的', 400);
+    }
+
+    const character = await Character.findByIdAndUpdate(
+      id,
+      { voice_id },
+      { new: true, runValidators: true }
+    ).populate('voice_id', 'name voice_id gender age_type');
+
+    if (!character) {
+      throw createError('角色未找到', 404);
+    }
+
+    res.json({
+      success: true,
+      data: character,
+      message: '角色配音更新成功'
+    });
+  });
 }

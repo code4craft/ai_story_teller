@@ -93,6 +93,18 @@ class StoryService {
     const response = await api.put(`/stories/${storyId}/chapters/reorder`, { chapters: chapterOrders });
     return response.data;
   }
+
+  // 生成单句对话语音
+  async generateDialogueAudio(data: {
+    text: string;
+    characterId: string;
+    voiceId?: string;
+  }): Promise<Blob> {
+    const response = await api.post('/tts/generate-dialogue', data, {
+      responseType: 'blob'
+    });
+    return response.data;
+  }
 }
 
 export default new StoryService();

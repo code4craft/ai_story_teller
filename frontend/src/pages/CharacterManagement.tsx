@@ -22,6 +22,7 @@ import {
   EditOutlined,
   EyeOutlined,
   PlayCircleOutlined,
+  SwapOutlined,
 } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import characterService, { CreateCharacterData } from '../services/characterService';
@@ -43,8 +44,11 @@ const CharacterManagement: React.FC = () => {
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [viewingCharacter, setViewingCharacter] = useState<Character | null>(null);
+  const [isVoiceModalVisible, setIsVoiceModalVisible] = useState(false);
+  const [selectedCharacterForVoiceUpdate, setSelectedCharacterForVoiceUpdate] = useState<Character | null>(null);
   
   const [form] = Form.useForm();
+  const [voiceForm] = Form.useForm();
   const queryClient = useQueryClient();
 
   // 查询角色列表
@@ -129,6 +133,24 @@ const CharacterManagement: React.FC = () => {
     }
   );
 
+  // 更新角色配音
+  const updateCharacterVoiceMutation = useMutation(
+    ({ characterId, voiceId }: { characterId: string; voiceId: string }) =>
+      characterService.updateCharacterVoice(characterId, voiceId),
+    {
+      onSuccess: () => {
+        message.success('配音更新成功');
+        queryClient.invalidateQueries(['characters']);
+        setIsVoiceModalVisible(false);
+        setSelectedCharacterForVoiceUpdate(null);
+        voiceForm.resetFields();
+      },
+      onError: () => {
+        message.error('配音更新失败');
+      },
+    }
+  );
+
   const handleCreate = () => {
     setEditingCharacter(null);
     setIsModalVisible(true);
@@ -147,6 +169,32 @@ const CharacterManagement: React.FC = () => {
   const handleDetail = (record: Character) => {
     setViewingCharacter(record);
     setDetailModalVisible(true);
+  };
+
+  // 打开配音更换对话框
+  const handleOpenVoiceModal = (character: Character) => {
+    setSelectedCharacterForVoiceUpdate(character);
+    setIsVoiceModalVisible(true);
+    
+    const currentVoice = character.voice_id as Voice;
+    voiceForm.setFieldsValue({
+      voice_id: currentVoice && typeof currentVoice === 'object' ? currentVoice._id : undefined,
+    });
+  };
+
+  // 提交配音更换
+  const handleVoiceUpdate = async () => {
+    if (!selectedCharacterForVoiceUpdate) return;
+    
+    try {
+      const values = await voiceForm.validateFields();
+      updateCharacterVoiceMutation.mutate({
+        characterId: selectedCharacterForVoiceUpdate._id,
+        voiceId: values.voice_id,
+      });
+    } catch (error) {
+      // 表单验证失败
+    }
   };
 
   const handleSubmit = async () => {
@@ -242,7 +290,7 @@ const CharacterManagement: React.FC = () => {
     {
       title: '配音',
       key: 'voice',
-      width: 150,
+      width: 200,
       render: (_: any, record: Character) => {
         const voice = record.voice_id as Voice;
         if (voice && typeof voice === 'object') {
@@ -258,10 +306,28 @@ const CharacterManagement: React.FC = () => {
                   title="试听音色样本"
                 />
               )}
+              <Button
+                type="link"
+                size="small"
+                icon={<SwapOutlined />}
+                onClick={() => handleOpenVoiceModal(record)}
+                title="更换配音"
+              />
             </Space>
           );
         }
-        return <span style={{ color: '#999' }}>未配置</span>;
+        return (
+          <Space size="small">
+            <span style={{ color: '#999' }}>未配置</span>
+            <Button
+              type="link"
+              size="small"
+              icon={<SwapOutlined />}
+              onClick={() => handleOpenVoiceModal(record)}
+              title="配置配音"
+            />
+          </Space>
+        );
       },
     },
     {
@@ -396,7 +462,7 @@ const CharacterManagement: React.FC = () => {
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条记录`,
           }}
-          scroll={{ x: 1000 }}
+          scroll={{ x: 1200 }}
         />
       </Card>
 
@@ -458,11 +524,9 @@ const CharacterManagement: React.FC = () => {
               filterOption={(input, option) =>
                 option?.children?.toString().toLowerCase().includes(input.toLowerCase()) ?? false
               }
-              optionRender={(option) => {
-                const voice = voicesData?.data?.find(v => v._id === option.value);
-                if (!voice) return <span>{option.label}</span>;
-                
-                return (
+            >
+              {voicesData?.data?.map(voice => (
+                <Option key={voice._id} value={voice._id}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span>{voice.name} ({voice.voice_id})</span>
                     {voice.sample_audio?.url && (
@@ -478,12 +542,6 @@ const CharacterManagement: React.FC = () => {
                       />
                     )}
                   </div>
-                );
-              }}
-            >
-              {voicesData?.data?.map(voice => (
-                <Option key={voice._id} value={voice._id}>
-                  {voice.name} ({voice.voice_id})
                 </Option>
               ))}
             </Select>
@@ -602,6 +660,70 @@ const CharacterManagement: React.FC = () => {
             </Descriptions.Item>
           </Descriptions>
         )}
+      </Modal>
+
+      {/* 配音更换对话框 */}
+      <Modal
+        title={`为 ${selectedCharacterForVoiceUpdate?.name} 更换配音`}
+        open={isVoiceModalVisible}
+        onOk={handleVoiceUpdate}
+        onCancel={() => {
+          setIsVoiceModalVisible(false);
+          setSelectedCharacterForVoiceUpdate(null);
+          voiceForm.resetFields();
+        }}
+        confirmLoading={updateCharacterVoiceMutation.isLoading}
+        width={600}
+      >
+        <div style={{ marginBottom: 16 }}>
+          <Tag color="warning">注意</Tag>
+          <span>更换配音会全局应用到该角色的所有对话中。</span>
+        </div>
+        
+        <Form
+          form={voiceForm}
+          layout="vertical"
+        >
+          <Form.Item
+            name="voice_id"
+            label="选择音色"
+            rules={[{ required: true, message: '请选择音色' }]}
+          >
+            <Select
+              placeholder="选择新的音色"
+              optionFilterProp="children"
+              showSearch
+              style={{ width: '100%' }}
+            >
+              {voicesData?.data?.map((voice: Voice) => (
+                <Option key={voice._id} value={voice._id}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Space>
+                      <span>{voice.name}</span>
+                      <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
+                        {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
+                      </Tag>
+                      <span style={{ color: '#666', fontSize: '12px' }}>({voice.voice_id})</span>
+                    </Space>
+                    {voice.sample_audio?.url && (
+                      <Button
+                        type="link"
+                        icon={<PlayCircleOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playVoiceSample(voice);
+                        }}
+                        size="small"
+                      >
+                        试听
+                      </Button>
+                    )}
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

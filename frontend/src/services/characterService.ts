@@ -80,6 +80,12 @@ class CharacterService {
       return [];
     }
   }
+
+  // 更新角色配音
+  async updateCharacterVoice(characterId: string, voiceId: string): Promise<ApiResponse<Character>> {
+    const response = await api.patch(`/characters/${characterId}/voice`, { voice_id: voiceId });
+    return response.data;
+  }
 }
 
 export default new CharacterService();
