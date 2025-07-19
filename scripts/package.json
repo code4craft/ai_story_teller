@@ -1,0 +1,15 @@
+{
+  "name": "ai-story-teller-scripts",
+  "version": "1.0.0",
+  "description": "AI故事讲述器数据导入脚本",
+  "main": "import-data.js",
+  "scripts": {
+    "import": "node import-data.js",
+    "clean": "node clean-database.js"
+  },
+  "dependencies": {
+    "mongoose": "^8.0.3",
+    "yamljs": "^0.3.0",
+    "dotenv": "^16.3.1"
+  }
+}
