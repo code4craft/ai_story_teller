@@ -117,10 +117,7 @@ export class StoryController {
 
     res.json({
       success: true,
-      data: {
-        story,
-        chapters
-      },
+      data: chapters,
       pagination: {
         page: Number(page),
         limit: Number(limit),
