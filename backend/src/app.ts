@@ -89,7 +89,7 @@ app.get('/debug/voices', async (req, res) => {
       directory: voicesDir,
       files: files.map((file: string) => ({
         name: file,
-        url: `/audio/voices/${file}`
+        url: `${process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3001}`}/audio/voices/${file}`
       }))
     });
   } catch (error: any) {

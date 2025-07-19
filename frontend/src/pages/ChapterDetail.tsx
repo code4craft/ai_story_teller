@@ -968,17 +968,45 @@ const ChapterDetail: React.FC = () => {
             rules={[{ required: true, message: '请选择音色' }]}
           >
             <Select
-              placeholder="选择新的音色"
-              optionFilterProp="children"
+              placeholder="搜索音色名称、性别、年龄类型..."
               showSearch
+              filterOption={(input, option) => {
+                const voice = voicesData?.data?.find(v => v._id === option?.value);
+                if (!voice) return false;
+                
+                const searchText = input.toLowerCase();
+                const searchFields = [
+                  voice.name.toLowerCase(),
+                  voice.voice_id.toLowerCase(),
+                  voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他',
+                  voice.age_type.toLowerCase(),
+                  voice.description?.toLowerCase() || '',
+                  // 添加拼音和常用搜索词
+                  voice.gender === 'male' ? 'nan nv male' : 'nv female',
+                  voice.age_type.includes('child') ? 'child kid 儿童 小孩' : '',
+                  voice.age_type.includes('adult') ? 'adult 成人 大人' : '',
+                  voice.age_type.includes('elderly') ? 'elderly old 老人 老年' : '',
+                ].join(' ');
+                
+                return searchFields.includes(searchText);
+              }}
+              style={{ width: '100%' }}
             >
               {voicesData?.data?.map((voice: Voice) => (
                 <Option key={voice._id} value={voice._id}>
-                  <Space>
-                    <Text>{voice.name}</Text>
-                    <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
-                      {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
-                    </Tag>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <Space>
+                      <Text strong>{voice.name}</Text>
+                      <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
+                        {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
+                      </Tag>
+                      <Tag color="default" style={{ fontSize: '11px' }}>
+                        {voice.age_type}
+                      </Tag>
+                      <Text type="secondary" style={{ fontSize: '11px' }}>
+                        {voice.voice_id}
+                      </Text>
+                    </Space>
                     {voice.sample_audio?.url && (
                       <Button
                         type="link"
@@ -988,11 +1016,12 @@ const ChapterDetail: React.FC = () => {
                           playVoiceSample(voice);
                         }}
                         size="small"
+                        title="试听音色样本"
                       >
                         试听
                       </Button>
                     )}
-                  </Space>
+                  </div>
                 </Option>
               ))}
             </Select>
@@ -1059,20 +1088,45 @@ const ChapterDetail: React.FC = () => {
             rules={[{ required: true, message: '请选择配音音色' }]}
           >
             <Select 
-              placeholder="选择音色"
+              placeholder="搜索音色名称、性别、年龄类型..."
               showSearch
-              filterOption={(input, option) =>
-                option?.children?.toString().toLowerCase().includes(input.toLowerCase()) ?? false
-              }
+              filterOption={(input, option) => {
+                const voice = voicesData?.data?.find(v => v._id === option?.value);
+                if (!voice) return false;
+                
+                const searchText = input.toLowerCase();
+                const searchFields = [
+                  voice.name.toLowerCase(),
+                  voice.voice_id.toLowerCase(),
+                  voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他',
+                  voice.age_type.toLowerCase(),
+                  voice.description?.toLowerCase() || '',
+                  // 添加拼音和常用搜索词
+                  voice.gender === 'male' ? 'nan male' : 'nv female',
+                  voice.age_type.includes('child') ? 'child kid 儿童 小孩' : '',
+                  voice.age_type.includes('adult') ? 'adult 成人 大人' : '',
+                  voice.age_type.includes('elderly') ? 'elderly old 老人 老年' : '',
+                  voice.age_type.includes('narrator') ? 'narrator 旁白 解说' : '',
+                ].join(' ');
+                
+                return searchFields.includes(searchText);
+              }}
+              style={{ width: '100%' }}
             >
               {voicesData?.data?.map(voice => (
                 <Option key={voice._id} value={voice._id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                     <Space>
-                      <span>{voice.name}</span>
+                      <Text strong>{voice.name}</Text>
                       <Tag color={voice.gender === 'male' ? 'blue' : 'pink'}>
                         {voice.gender === 'male' ? '男声' : voice.gender === 'female' ? '女声' : '其他'}
                       </Tag>
+                      <Tag color="default" style={{ fontSize: '11px' }}>
+                        {voice.age_type}
+                      </Tag>
+                      <Text type="secondary" style={{ fontSize: '11px' }}>
+                        {voice.voice_id}
+                      </Text>
                     </Space>
                     {voice.sample_audio?.url && (
                       <Button

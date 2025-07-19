@@ -40,16 +40,14 @@ export class ScriptParserService {
         const character = dialogueMatch[1].trim();
         const text = dialogueMatch[2].trim();
         
-        // 过滤掉"旁白"
-        if (character !== '旁白') {
-          dialogues.push({
-            character,
-            text,
-            line_number: i + 1
-          });
-          
-          charactersSet.add(character);
-        }
+        // 包含所有角色，包括旁白
+        dialogues.push({
+          character,
+          text,
+          line_number: i + 1
+        });
+        
+        charactersSet.add(character);
       }
     }
     

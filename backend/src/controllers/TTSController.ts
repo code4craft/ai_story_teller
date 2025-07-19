@@ -185,7 +185,7 @@ export class TTSController {
         data: {
           filename,
           path: filepath,
-          url: `/audio/chapters/${filename}`,
+          url: `${process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3001}`}/audio/chapters/${filename}`,
           size: finalAudio.length,
           segmentsCount: audioSegments.length
         }

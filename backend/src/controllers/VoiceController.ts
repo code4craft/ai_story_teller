@@ -133,7 +133,8 @@ export class VoiceController {
       if (save_sample) {
         const filename = `${voice.voice_id}_${Date.now()}.mp3`;
         const filepath = path.join(this.audioDir, filename);
-        const url = `/audio/voices/${filename}`;
+        const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 3001}`;
+        const url = `${baseUrl}/audio/voices/${filename}`;
         
         // 保存音频文件
         await fs.writeFile(filepath, audioBuffer);
