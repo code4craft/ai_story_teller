@@ -270,9 +270,8 @@ const VoiceManagement: React.FC = () => {
                   message.error('音频URL不存在');
                   return;
                 }
-                const audioUrl = `${getBackendUrl()}${record.sample_audio.url}`;
-                console.log('尝试播放音频:', audioUrl);
-                const audio = new Audio(audioUrl);
+                console.log('尝试播放音频:', record.sample_audio.url);
+                const audio = new Audio(record.sample_audio.url);
                 audio.play().catch((error) => {
                   console.error('音频播放失败:', error);
                   message.error('音频播放失败，请检查文件是否存在');
@@ -532,9 +531,8 @@ const VoiceManagement: React.FC = () => {
                     message.error('样本音频URL不存在');
                     return;
                   }
-                  const audioUrl = `${getBackendUrl()}${testingVoice.sample_audio.url}`;
-                  console.log('尝试播放样本音频:', audioUrl);
-                  const audio = new Audio(audioUrl);
+                  console.log('尝试播放样本音频:', testingVoice.sample_audio.url);
+                  const audio = new Audio(testingVoice.sample_audio.url);
                   audio.play().catch((error) => {
                     console.error('样本音频播放失败:', error);
                     message.error('样本音频播放失败，请检查文件是否存在');

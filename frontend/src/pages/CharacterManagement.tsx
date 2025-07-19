@@ -241,8 +241,7 @@ const CharacterManagement: React.FC = () => {
   // 播放音色样本
   const playVoiceSample = (voice: Voice) => {
     if (voice.sample_audio?.url) {
-      const audioUrl = `http://localhost:3001${voice.sample_audio.url}`;
-      const audio = new Audio(audioUrl);
+      const audio = new Audio(voice.sample_audio.url);
       audio.play().catch((error) => {
         console.error('音频播放失败:', error);
         message.error('音频播放失败');

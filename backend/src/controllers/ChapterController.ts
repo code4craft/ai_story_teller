@@ -74,17 +74,25 @@ export class ChapterController {
 
   // 更新章节
   updateChapter = asyncHandler(async (req: Request, res: Response) => {
+    // 先获取现有章节数据
+    const existingChapter = await Chapter.findById(req.params.id);
+    if (!existingChapter) {
+      throw createError('章节未找到', 404);
+    }
+
+    // 合并更新数据，确保 story_series_id 不被覆盖为空
+    const updateData = {
+      ...req.body,
+      story_series_id: req.body.story_series_id || existingChapter.story_series_id
+    };
+
     const chapter = await Chapter.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     )
       .populate('story_series_id', 'title')
       .populate('characters_used', 'name gender voice_id');
-
-    if (!chapter) {
-      throw createError('章节未找到', 404);
-    }
 
     res.json({
       success: true,

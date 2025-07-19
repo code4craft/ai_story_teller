@@ -39,6 +39,7 @@ import {
   SoundOutlined,
   LoadingOutlined,
   SwapOutlined,
+  DisconnectOutlined,
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
@@ -265,6 +266,7 @@ const ChapterDetail: React.FC = () => {
         ...values,
         content,
         characters_used: selectedCharacters,
+        story_series_id: seriesId, // 确保包含故事系列ID
       });
     } catch (error) {
       message.error('请检查表单填写是否正确');
@@ -334,8 +336,7 @@ const ChapterDetail: React.FC = () => {
   // 播放音色样本
   const playVoiceSample = (voice: Voice) => {
     if (voice.sample_audio?.url) {
-      const audioUrl = `http://localhost:3001${voice.sample_audio.url}`;
-      const audio = new Audio(audioUrl);
+      const audio = new Audio(voice.sample_audio.url);
       audio.play().catch((error) => {
         console.error('音频播放失败:', error);
         message.error('音频播放失败');
@@ -582,6 +583,26 @@ const ChapterDetail: React.FC = () => {
                       </Button>
                     )}
                     
+                    {/* 取消绑定 */}
+                    {isMatched && (
+                      <Button
+                        type="link"
+                        icon={<DisconnectOutlined />}
+                        onClick={() => {
+                          setCharacterMapping(prev => {
+                            const newMapping = { ...prev };
+                            delete newMapping[dialogue.character];
+                            return newMapping;
+                          });
+                          message.success(`已取消 ${dialogue.character} 的角色绑定`);
+                        }}
+                        size="small"
+                        danger
+                      >
+                        取消绑定
+                      </Button>
+                    )}
+                    
                     {/* 角色选择 */}
                     {!isMatched && (
                       <Select
@@ -589,6 +610,18 @@ const ChapterDetail: React.FC = () => {
                         style={{ width: 120 }}
                         size="small"
                         value={mappedCharacterId}
+                        showSearch
+                        filterOption={(input, option) => {
+                          const character = charactersData?.data?.find(c => c._id === option?.value);
+                          if (!character) return false;
+                          
+                          const searchText = input.toLowerCase();
+                          return (
+                            character.name.toLowerCase().includes(searchText) ||
+                            (character.gender === 'male' ? '男' : '女').includes(searchText) ||
+                            character.age_type.toLowerCase().includes(searchText)
+                          );
+                        }}
                         onChange={(characterId) => {
                           setCharacterMapping(prev => ({
                             ...prev,
@@ -822,6 +855,20 @@ const ChapterDetail: React.FC = () => {
                                 style={{ width: '100%' }}
                                 size="small"
                                 value={mappedCharacterId}
+                                showSearch
+                                filterOption={(input, option) => {
+                                  if (option?.value === 'CREATE_NEW') return true; // 总是显示"新建角色"选项
+                                  
+                                  const character = charactersData?.data?.find(c => c._id === option?.value);
+                                  if (!character) return false;
+                                  
+                                  const searchText = input.toLowerCase();
+                                  return (
+                                    character.name.toLowerCase().includes(searchText) ||
+                                    (character.gender === 'male' ? '男' : '女').includes(searchText) ||
+                                    character.age_type.toLowerCase().includes(searchText)
+                                  );
+                                }}
                                 onChange={(characterId) => {
                                   if (characterId === 'CREATE_NEW') {
                                     handleCreateNewCharacter(scriptChar);
@@ -837,11 +884,31 @@ const ChapterDetail: React.FC = () => {
                                 }}
                                 allowClear
                                 onClear={() => {
-                                  setCharacterMapping(prev => {
-                                    const newMapping = { ...prev };
-                                    delete newMapping[scriptChar];
-                                    return newMapping;
-                                  });
+                                  // 获取当前绑定的角色ID
+                                  const characterId = characterMapping[scriptChar];
+                                  
+                                  if (characterId) {
+                                    // 清理所有绑定到这个角色的映射
+                                    setCharacterMapping(prev => {
+                                      const newMapping = { ...prev };
+                                      
+                                      // 找到所有绑定到该角色ID的对话角色名称并删除
+                                      Object.keys(newMapping).forEach(charName => {
+                                        if (newMapping[charName] === characterId) {
+                                          delete newMapping[charName];
+                                        }
+                                      });
+                                      
+                                      return newMapping;
+                                    });
+                                    
+                                    // 从选中角色列表中移除该角色
+                                    setSelectedCharacters(prev => 
+                                      prev.filter(id => id !== characterId)
+                                    );
+                                    
+                                    message.success('已解绑角色，相关对话已变为待选择状态');
+                                  }
                                 }}
                                 dropdownRender={(menu) => (
                                   <>
@@ -920,10 +987,56 @@ const ChapterDetail: React.FC = () => {
         <Select
           mode="multiple"
           style={{ width: '100%' }}
-          placeholder="选择参与本章节的角色"
+          placeholder="搜索角色名称、性别、年龄类型..."
           value={selectedCharacters}
-          onChange={setSelectedCharacters}
-          optionFilterProp="children"
+          onChange={(newSelectedCharacters) => {
+            // 找出被移除的角色
+            const removedCharacters = selectedCharacters.filter(
+              id => !newSelectedCharacters.includes(id)
+            );
+            
+            // 清理被移除角色的映射
+            if (removedCharacters.length > 0) {
+              setCharacterMapping(prev => {
+                const newMapping = { ...prev };
+                
+                // 移除所有指向被删除角色的映射
+                removedCharacters.forEach(removedCharacterId => {
+                  Object.keys(newMapping).forEach(charName => {
+                    if (newMapping[charName] === removedCharacterId) {
+                      delete newMapping[charName];
+                    }
+                  });
+                });
+                
+                return newMapping;
+              });
+              
+              const characterNames = removedCharacters.map(id => {
+                const char = charactersData?.data?.find(c => c._id === id);
+                return char?.name || '未知角色';
+              });
+              
+              message.success(`已移除角色 ${characterNames.join('、')}，相关对话已变为待选择状态`);
+            }
+            
+            setSelectedCharacters(newSelectedCharacters);
+          }}
+          showSearch
+          filterOption={(input, option) => {
+            const character = charactersData?.data?.find(c => c._id === option?.value);
+            if (!character) return false;
+            
+            const searchText = input.toLowerCase();
+            return (
+              character.name.toLowerCase().includes(searchText) ||
+              (character.gender === 'male' ? '男' : character.gender === 'female' ? '女' : '其他').includes(searchText) ||
+              character.age_type.toLowerCase().includes(searchText) ||
+              character.personality?.some(p => p.toLowerCase().includes(searchText)) ||
+              // 添加拼音和常用搜索词
+              (character.gender === 'male' ? 'nan male' : character.gender === 'female' ? 'nv female' : '').includes(searchText)
+            );
+          }}
         >
           {charactersData?.data?.map(character => (
             <Option key={character._id} value={character._id}>
