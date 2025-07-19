@@ -132,14 +132,14 @@ export class VoiceController {
 
   // 搜索音色
   searchVoices = asyncHandler(async (req: Request, res: Response) => {
-    const { q, page = 1, limit = 20 } = req.query;
+    const { q, page = 1, limit = 20, gender, age_type, provider } = req.query;
     
     if (!q) {
       throw createError('请提供搜索关键词', 400);
     }
 
     const searchRegex = new RegExp(q as string, 'i');
-    const query = {
+    const query: any = {
       $or: [
         { name: searchRegex },
         { description: searchRegex },
@@ -147,6 +147,11 @@ export class VoiceController {
         { style: searchRegex }
       ]
     };
+
+    // 添加额外的过滤条件
+    if (gender) query.gender = gender;
+    if (age_type) query.age_type = age_type;
+    if (provider) query.provider = provider;
 
     const voices = await Voice.find(query)
       .limit(Number(limit))

@@ -8,6 +8,9 @@ const voiceController = new VoiceController();
 // GET /api/voices - 获取所有音色
 router.get('/', voiceController.getAllVoices);
 
+// GET /api/voices/search - 搜索音色（必须在 /:id 之前）
+router.get('/search', voiceController.searchVoices);
+
 // GET /api/voices/:id - 获取单个音色
 router.get('/:id', voiceController.getVoiceById);
 
@@ -22,8 +25,5 @@ router.delete('/:id', voiceController.deleteVoice);
 
 // POST /api/voices/:id/test - 测试音色（输入文字试听）
 router.post('/:id/test', voiceController.testVoice);
-
-// GET /api/voices/search - 搜索音色
-router.get('/search', voiceController.searchVoices);
 
 export default router;

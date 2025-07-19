@@ -33,6 +33,8 @@ const VoiceManagement: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedAgeType, setSelectedAgeType] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingVoice, setEditingVoice] = useState<Voice | null>(null);
   const [testModalVisible, setTestModalVisible] = useState(false);
@@ -45,12 +47,27 @@ const VoiceManagement: React.FC = () => {
 
   // 查询音色列表
   const { data: voicesData, isLoading } = useQuery(
-    ['voices', searchText, selectedGender, selectedAgeType],
-    () => voiceService.getVoices({
-      q: searchText || undefined,
-      gender: selectedGender || undefined,
-      age_type: selectedAgeType || undefined,
-    }),
+    ['voices', searchText, selectedGender, selectedAgeType, currentPage, pageSize],
+    () => {
+      // 如果有搜索文本，使用搜索API
+      if (searchText && searchText.trim()) {
+        return voiceService.searchVoices({
+          q: searchText,
+          gender: selectedGender || undefined,
+          age_type: selectedAgeType || undefined,
+          page: currentPage,
+          limit: pageSize,
+        });
+      } else {
+        // 否则使用普通列表API
+        return voiceService.getVoices({
+          gender: selectedGender || undefined,
+          age_type: selectedAgeType || undefined,
+          page: currentPage,
+          limit: pageSize,
+        });
+      }
+    },
     {
       refetchOnWindowFocus: false,
     }
@@ -148,6 +165,28 @@ const VoiceManagement: React.FC = () => {
     } catch (error) {
       // 表单验证失败
     }
+  };
+
+  // 处理表格分页、排序、过滤变化
+  const handleTableChange = (pagination: any) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  // 处理搜索条件改变时重置到第一页
+  const handleSearchChange = (value: string) => {
+    setSearchText(value);
+    setCurrentPage(1);
+  };
+
+  const handleGenderChange = (value: string) => {
+    setSelectedGender(value);
+    setCurrentPage(1);
+  };
+
+  const handleAgeTypeChange = (value: string) => {
+    setSelectedAgeType(value);
+    setCurrentPage(1);
   };
 
   const columns = [
@@ -264,14 +303,14 @@ const VoiceManagement: React.FC = () => {
               placeholder="搜索音色名称或ID"
               prefix={<SearchOutlined />}
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               style={{ width: 250 }}
               allowClear
             />
             <Select
               placeholder="选择性别"
               value={selectedGender}
-              onChange={setSelectedGender}
+              onChange={handleGenderChange}
               style={{ width: 120 }}
               allowClear
             >
@@ -282,7 +321,7 @@ const VoiceManagement: React.FC = () => {
             <Select
               placeholder="选择年龄类型"
               value={selectedAgeType}
-              onChange={setSelectedAgeType}
+              onChange={handleAgeTypeChange}
               style={{ width: 140 }}
               allowClear
             >
@@ -311,10 +350,11 @@ const VoiceManagement: React.FC = () => {
           dataSource={voicesData?.data || []}
           rowKey="_id"
           loading={isLoading}
+          onChange={handleTableChange}
           pagination={{
             total: voicesData?.pagination?.total || 0,
-            pageSize: voicesData?.pagination?.limit || 20,
-            current: voicesData?.pagination?.page || 1,
+            pageSize: pageSize,
+            current: currentPage,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条记录`,

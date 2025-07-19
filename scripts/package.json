@@ -5,10 +5,12 @@
   "main": "import-data.js",
   "scripts": {
     "import": "node import-data.js",
+    "import-voices": "node import-voices.js",
     "clean": "node clean-database.js"
   },
   "dependencies": {
     "mongoose": "^8.0.3",
+    "mongodb": "^6.3.0",
     "yamljs": "^0.3.0",
     "dotenv": "^16.3.1"
   }
