@@ -1,0 +1,34 @@
+# 大模型语音合成API依赖
+aiohttp>=3.9.0
+
+# HTTP请求（兼容性保留）
+requests>=2.31.0
+
+# 环境变量管理
+python-dotenv>=1.0.0
+
+# 日志
+loguru>=0.7.0
+
+# 火山引擎官方Python SDK（兼容性保留）
+volcengine-python-sdk>=1.0.98.98
+
+# 进度条显示
+tqdm>=4.66.0
+
+# PDF处理
+PyPDF2>=3.0.1
+pdfplumber>=0.9.0
+
+# YAML配置
+PyYAML>=6.0
+
+# 自然语言处理和文本分析
+jieba>=0.42.1
+openai>=1.0.0  # 用于对话分析（可选）
+
+# 正则表达式增强
+regex>=2023.0.0
+
+# 数据类支持
+dataclasses>=0.6; python_version<"3.7"
