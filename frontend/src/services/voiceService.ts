@@ -23,6 +23,7 @@ export interface CreateVoiceData {
 
 export interface TestVoiceData {
   text: string;
+  save_sample?: boolean;
 }
 
 class VoiceService {

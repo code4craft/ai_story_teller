@@ -23,7 +23,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // 中间件
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
@@ -33,7 +35,22 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // 静态文件服务（音频文件）
-app.use('/audio', express.static('uploads/audio'));
+// 注意：更具体的路由必须放在更通用的路由之前
+app.use('/audio/voices', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static('uploads/voices'));
+
+app.use('/audio', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static('uploads/audio'));
 
 // API路由
 app.use('/api/voices', voiceRoutes);
@@ -49,6 +66,25 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+// 调试：列出voices目录文件
+app.get('/debug/voices', async (req, res) => {
+  try {
+    const fs = require('fs').promises;
+    const path = require('path');
+    const voicesDir = path.join(process.cwd(), 'uploads', 'voices');
+    const files: string[] = await fs.readdir(voicesDir);
+    res.json({ 
+      directory: voicesDir,
+      files: files.map((file: string) => ({
+        name: file,
+        url: `/audio/voices/${file}`
+      }))
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error?.message || 'Unknown error' });
+  }
 });
 
 // 404处理

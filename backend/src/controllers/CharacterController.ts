@@ -149,4 +149,30 @@ export class CharacterController {
       data: characters
     });
   });
+
+  // 获取所有故事系列列表
+  getStorySeries = asyncHandler(async (req: Request, res: Response) => {
+    const storySeries = await Character.distinct('story_series').exec();
+    
+    // 过滤掉空值和null值
+    const validStorySeries = storySeries.filter(series => series && series.trim() !== '');
+    
+    res.json({
+      success: true,
+      data: validStorySeries.sort()
+    });
+  });
+
+  // 获取所有角色分类列表
+  getCategories = asyncHandler(async (req: Request, res: Response) => {
+    const categories = await Character.distinct('category').exec();
+    
+    // 过滤掉空值和null值
+    const validCategories = categories.filter(category => category && category.trim() !== '');
+    
+    res.json({
+      success: true,
+      data: validCategories.sort()
+    });
+  });
 }

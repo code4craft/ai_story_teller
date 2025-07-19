@@ -9,6 +9,13 @@ export interface IVoice extends Document {
   language: string;
   style: string;
   provider: string;
+  sample_audio?: {
+    filename: string;      // 音频文件名
+    path: string;         // 音频文件路径
+    url: string;          // 音频访问URL
+    text: string;         // 测试时使用的文本
+    created_at: Date;     // 音频生成时间
+  };
   created_at: Date;
   updated_at: Date;
 }
@@ -52,6 +59,24 @@ const VoiceSchema: Schema = new Schema({
     type: String,
     required: true,
     default: 'volcengine'
+  },
+  sample_audio: {
+    filename: {
+      type: String
+    },
+    path: {
+      type: String
+    },
+    url: {
+      type: String
+    },
+    text: {
+      type: String
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
+    }
   }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

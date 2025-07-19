@@ -27,6 +27,13 @@ export interface Voice {
   language: string;
   style?: string;
   provider: string;
+  sample_audio?: {
+    filename: string;
+    path: string;
+    url: string;
+    text: string;
+    created_at: string;
+  };
   created_at: string;
   updated_at: string;
 }

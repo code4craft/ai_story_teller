@@ -11,14 +11,13 @@ import {
   message,
   Card,
   Typography,
-  Popconfirm,
+  Checkbox,
 } from 'antd';
 import {
   PlusOutlined,
   SearchOutlined,
   PlayCircleOutlined,
   EditOutlined,
-  DeleteOutlined,
   SoundOutlined,
 } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
@@ -40,6 +39,14 @@ const VoiceManagement: React.FC = () => {
   const [testModalVisible, setTestModalVisible] = useState(false);
   const [testingVoice, setTestingVoice] = useState<Voice | null>(null);
   const [audioUrl, setAudioUrl] = useState<string>('');
+  const [saveSample, setSaveSample] = useState(false);
+  
+  // 获取后端服务器URL
+  const getBackendUrl = () => {
+    return process.env.NODE_ENV === 'production' 
+      ? window.location.origin 
+      : 'http://localhost:3001';
+  };
   
   const [form] = Form.useForm();
   const [testForm] = Form.useForm();
@@ -98,13 +105,6 @@ const VoiceManagement: React.FC = () => {
     }
   );
 
-  // 删除音色
-  const deleteMutation = useMutation(voiceService.deleteVoice, {
-    onSuccess: () => {
-      message.success('音色删除成功');
-      queryClient.invalidateQueries(['voices']);
-    },
-  });
 
   // 测试音色
   const testMutation = useMutation(
@@ -115,6 +115,12 @@ const VoiceManagement: React.FC = () => {
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
         message.success('音频生成成功');
+        
+        // 如果保存了样本，刷新列表
+        if (saveSample) {
+          queryClient.invalidateQueries(['voices']);
+          message.success('音色样本已保存');
+        }
       },
     }
   );
@@ -131,9 +137,6 @@ const VoiceManagement: React.FC = () => {
     form.setFieldsValue(record);
   };
 
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
-  };
 
   const handleSubmit = async () => {
     try {
@@ -153,6 +156,7 @@ const VoiceManagement: React.FC = () => {
     setTestingVoice(record);
     setTestModalVisible(true);
     setAudioUrl('');
+    setSaveSample(false);
     testForm.setFieldsValue({ text: '你好，这是音色测试。' });
   };
 
@@ -161,7 +165,10 @@ const VoiceManagement: React.FC = () => {
     
     try {
       const values = await testForm.validateFields();
-      testMutation.mutate({ id: testingVoice._id, data: values });
+      testMutation.mutate({ 
+        id: testingVoice._id, 
+        data: { ...values, save_sample: saveSample }
+      });
     } catch (error) {
       // 表单验证失败
     }
@@ -246,9 +253,43 @@ const VoiceManagement: React.FC = () => {
       ellipsis: true,
     },
     {
+      title: '样本试听',
+      key: 'sample_audio',
+      width: 80,
+      render: (_: any, record: Voice) => {
+        console.log('音色记录:', record.name, 'sample_audio:', record.sample_audio);
+        
+        if (record.sample_audio?.url) {
+          return (
+            <Button
+              type="link"
+              size="small"
+              icon={<PlayCircleOutlined />}
+              onClick={() => {
+                if (!record.sample_audio?.url) {
+                  message.error('音频URL不存在');
+                  return;
+                }
+                const audioUrl = `${getBackendUrl()}${record.sample_audio.url}`;
+                console.log('尝试播放音频:', audioUrl);
+                const audio = new Audio(audioUrl);
+                audio.play().catch((error) => {
+                  console.error('音频播放失败:', error);
+                  message.error('音频播放失败，请检查文件是否存在');
+                });
+              }}
+            >
+              播放
+            </Button>
+          );
+        }
+        return <span style={{ color: '#999' }}>无样本</span>;
+      },
+    },
+    {
       title: '操作',
       key: 'action',
-      width: 200,
+      width: 140,
       render: (_: any, record: Voice) => (
         <Space size="small">
           <Button
@@ -256,7 +297,7 @@ const VoiceManagement: React.FC = () => {
             icon={<PlayCircleOutlined />}
             onClick={() => handleTest(record)}
           >
-            试听
+            测试
           </Button>
           <Button
             type="link"
@@ -265,20 +306,6 @@ const VoiceManagement: React.FC = () => {
           >
             编辑
           </Button>
-          <Popconfirm
-            title="确定要删除这个音色吗？"
-            onConfirm={() => handleDelete(record._id)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <Button
-              type="link"
-              danger
-              icon={<DeleteOutlined />}
-            >
-              删除
-            </Button>
-          </Popconfirm>
         </Space>
       ),
     },
@@ -457,6 +484,7 @@ const VoiceManagement: React.FC = () => {
           setTestModalVisible(false);
           setTestingVoice(null);
           setAudioUrl('');
+          setSaveSample(false);
           testForm.resetFields();
         }}
         confirmLoading={testMutation.isLoading}
@@ -479,7 +507,45 @@ const VoiceManagement: React.FC = () => {
               showCount
             />
           </Form.Item>
+          
+          <Form.Item>
+            <Checkbox
+              checked={saveSample}
+              onChange={(e) => setSaveSample(e.target.checked)}
+            >
+              保存为音色样本（将替换现有样本）
+            </Checkbox>
+          </Form.Item>
         </Form>
+
+        {testingVoice?.sample_audio && (
+          <div style={{ marginBottom: 16, padding: 12, backgroundColor: '#f5f5f5', borderRadius: 4 }}>
+            <p style={{ margin: 0, fontSize: 12, color: '#666' }}>
+              当前样本文本：{testingVoice.sample_audio.text}
+            </p>
+            <div style={{ marginTop: 8 }}>
+              <Button
+                size="small"
+                icon={<PlayCircleOutlined />}
+                onClick={() => {
+                  if (!testingVoice.sample_audio?.url) {
+                    message.error('样本音频URL不存在');
+                    return;
+                  }
+                  const audioUrl = `${getBackendUrl()}${testingVoice.sample_audio.url}`;
+                  console.log('尝试播放样本音频:', audioUrl);
+                  const audio = new Audio(audioUrl);
+                  audio.play().catch((error) => {
+                    console.error('样本音频播放失败:', error);
+                    message.error('样本音频播放失败，请检查文件是否存在');
+                  });
+                }}
+              >
+                播放当前样本
+              </Button>
+            </div>
+          </div>
+        )}
 
         {audioUrl && (
           <div style={{ marginTop: 16 }}>

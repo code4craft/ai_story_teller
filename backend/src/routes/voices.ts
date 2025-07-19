@@ -26,4 +26,7 @@ router.delete('/:id', voiceController.deleteVoice);
 // POST /api/voices/:id/test - 测试音色（输入文字试听）
 router.post('/:id/test', voiceController.testVoice);
 
+// GET /api/voices/:id/debug - 调试音色数据（开发环境专用）
+router.get('/:id/debug', voiceController.debugVoice);
+
 export default router;
