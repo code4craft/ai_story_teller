@@ -1,14 +1,19 @@
-# 三只小猪故事系列 - 角色配置文件
+# AI故事讲述器 - 角色配置文件
+# 按故事系列分类组织，便于查找和管理
 # 每个角色配置包含：名称、性别、年龄类型、性格特点、TTS音色
 
-# 主要角色 - 小猪一家
+# ==============================
+# 1. 三只小猪故事系列
+# ==============================
+
+# 主角家庭成员
 pig_family:
   猪爸爸:
     name: "猪爸爸"
     gender: "male"
     age_type: "adult"
     personality: ["温和", "有责任感", "音乐家", "有些纠结"]
-    tts_voice: "zh_male_wennuanahu_moon_bigtts"  # 默认男声
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
     description: "钢琴家，三只小猪的父亲"
     
   猪妈妈:
@@ -16,7 +21,7 @@ pig_family:
     gender: "female"
     age_type: "adult" 
     personality: ["贤惠", "关爱家庭", "督促孩子"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"  # 默认女声
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
     description: "三只小猪的母亲"
     
   猪爷爷:
@@ -24,7 +29,7 @@ pig_family:
     gender: "male"
     age_type: "elderly"
     personality: ["智慧", "和蔼", "音乐家", "博学"]
-    tts_voice: "ICL_zh_male_youmodaye_tob"  # 老年男声
+    tts_voice: "ICL_zh_male_youmodaye_tob"
     description: "猪爸爸的父亲，退休钢琴师"
     
   大宝:
@@ -32,7 +37,7 @@ pig_family:
     gender: "male"
     age_type: "child"
     personality: ["聪明", "有天赋", "有些懒惰", "容易受影响"]
-    tts_voice: "ICL_zh_male_wenrounantongzhuo_tob"  # 男童声
+    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"
     description: "三只小猪中的老大，钢琴天赋"
     
   二宝:
@@ -40,7 +45,7 @@ pig_family:
     gender: "male"
     age_type: "child"
     personality: ["活泼", "好奇"]
-    tts_voice: "ICL_zh_male_wenrounantongzhuo_tob"  # 男童声2
+    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"
     description: "三只小猪中的老二"
     
   小宝:
@@ -48,7 +53,7 @@ pig_family:
     gender: "male"
     age_type: "child"
     personality: ["天真", "可爱"]
-    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"  # 男童声3
+    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"
     description: "三只小猪中的老三"
 
   小猪们:
@@ -56,8 +61,40 @@ pig_family:
     gender: "male"
     age_type: "child"
     personality: ["天真", "可爱"]
-    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"  # 男童声3
-    description: "三只小猪中的老三"    
+    tts_voice: "zh_male_tiancaitongsheng_mars_bigtts"
+    description: "三只小猪统称"
+
+  姑妈:
+    name: "姑妈"
+    gender: "female"
+    age_type: "adult"
+    personality: ["热情", "医生", "关爱"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "三只小猪的姑妈，医生"
+    
+  姑爹:
+    name: "姑爹"
+    gender: "male"
+    age_type: "adult"
+    personality: ["医生", "警告"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "三只小猪的姑爹，医生"
+    
+  姑父:
+    name: "姑父"
+    gender: "male"
+    age_type: "adult"
+    personality: ["医生", "警告"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "三只小猪的姑父，医生"
+    
+  姑姑:
+    name: "姑姑"
+    gender: "female"
+    age_type: "adult"
+    personality: ["严厉", "护短"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "三只小猪的姑姑"
 
 # 工作相关角色
 work_characters:
@@ -66,7 +103,7 @@ work_characters:
     gender: "male"
     age_type: "adult"
     personality: ["功利", "势利", "商业化", "压力型"]
-    tts_voice: "zh_male_guozhoudege_moon_bigtts"  # 商业男声
+    tts_voice: "zh_male_guozhoudege_moon_bigtts"
     description: "演出公司团长，猪爸爸的上司"
     
   团长助手:
@@ -84,7 +121,7 @@ mythical_characters:
     gender: "male"
     age_type: "divine"
     personality: ["威严", "愤怒", "神圣", "对音乐严肃"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"  # 威严神声
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
     description: "音乐之神，小猪形象的神明"
     
   百灵鸟:
@@ -92,7 +129,7 @@ mythical_characters:
     gender: "female"
     age_type: "adult"
     personality: ["优雅", "智慧", "信使"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"  # 清脆鸟声
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "哈托尔的信使"
 
 # 音乐家角色
@@ -110,88 +147,25 @@ musicians:
     gender: "female"
     age_type: "adult"
     personality: ["职业", "但过度使用嗓子"]
-    tts_voice: "BV012_streaming"  # 略沙哑女声
+    tts_voice: "BV012_streaming"
     description: "祭典表演的歌唱家"
 
-# 群体角色
-group_characters:
-  观众们:
-    name: "观众们"
+# 学校朋友
+school_friends:
+  朋友们:
+    name: "朋友们"
     gender: "mixed"
-    age_type: "mixed"
-    personality: ["热闹", "议论纷纷"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"  # 群体声音
-    description: "祭典现场的观众"
-    
-  观众:
-    name: "观众"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["赞赏", "被音乐感动"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "酒吧和演出的观众"
-    
-  新闻播报员:
-    name: "新闻播报员"
-    gender: "female"
-    age_type: "adult"
-    personality: ["专业", "播报新闻"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"  # 播音员女声
-    description: "电视新闻播报员"
-    
-  听众们:
-    name: "听众们"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["被感动", "寻求慰藉"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "赫巴音乐的听众"
-    
-  教会:
-    name: "教会"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["权威", "传统", "严厉"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "地利国教会代表"
-    
-  评论家们:
-    name: "评论家们"
-    gender: "mixed"
-    age_type: "adult"
-    personality: ["专业", "批评", "赞赏"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "民新国音乐评论家"
-    
-  电视新闻:
-    name: "电视新闻"
-    gender: "neutral"
-    age_type: "adult"
-    personality: ["客观", "播报"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "慕斯国电视新闻"
-    
-  船长:
-    name: "船长"
-    gender: "male"
-    age_type: "adult"
-    personality: ["经验丰富", "友好", "乐于助人"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "轮船船长"
+    age_type: "child"
+    personality: ["羡慕", "赞叹"]
+    tts_voice: "zh_female_wanqudashu_moon_bigtts"
+    description: "三只小猪的学校朋友们"
 
-# 旁白角色
-narrator:
-  旁白:
-    name: "旁白"
-    gender: "neutral"
-    age_type: "narrator"
-    personality: ["客观", "叙述性", "引导性"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"  # 旁白专用声音
-    description: "故事叙述者"
+# ==============================
+# 2. 零食星球故事系列
+# ==============================
 
-# 其他故事中的角色（后续故事的主要角色）
-other_stories:
-  # 零食星球故事角色
+snack_planet_characters:
+  # 主要角色
   波波:
     name: "波波"
     gender: "male"
@@ -224,6 +198,7 @@ other_stories:
     tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
     description: "约克的远房表哥，SP公司前调查员"
     
+  # 反派角色
   金牙国王:
     name: "金牙国王"
     gender: "male"
@@ -240,6 +215,7 @@ other_stories:
     tts_voice: "zh_male_guozhoudege_moon_bigtts"
     description: "SP公司安全调查队长，大灰狼"
     
+  # 配角
   兔子汇报员:
     name: "兔子汇报员"
     gender: "male"
@@ -263,23 +239,8 @@ other_stories:
     personality: ["专业", "团队合作"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "调查队的成员们"
-    
-  老板:
-    name: "老板"
-    gender: "male"
-    age_type: "adult"
-    personality: ["和蔼", "解释", "热情"]
-    tts_voice: "zh_male_wennuanahu_moon_bigtts"
-    description: "动物星球零食店老板，熊"
-    
-  大家:
-    name: "大家"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["紧张", "惊讶"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "动物星球的民众"
-    
+
+  # 各国角色
   猪市长:
     name: "猪市长"
     gender: "male"
@@ -319,46 +280,15 @@ other_stories:
     personality: ["商议", "妥协", "无奈"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "动物星球各国首脑"
-    
-  小动物们:
-    name: "小动物们"
-    gender: "mixed"
-    age_type: "child"
-    personality: ["哭闹", "想要零食", "天真"]
-    tts_voice: "zh_female_wanqudashu_moon_bigtts"
-    description: "动物星球的小动物们"
-    
-  妈妈们:
-    name: "妈妈们"
-    gender: "female"
+
+  # 商铺角色
+  老板:
+    name: "老板"
+    gender: "male"
     age_type: "adult"
-    personality: ["无奈", "安慰孩子", "心疼"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "小动物们的妈妈"
-    
-  动物星球广播:
-    name: "动物星球广播"
-    gender: "neutral"
-    age_type: "adult"
-    personality: ["宣告", "正式", "战争"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "动物星球官方广播"
-    
-  零食星球民众:
-    name: "零食星球民众"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["愤怒", "抗议", "被欺骗"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "零食星球的人民"
-    
-  警报声:
-    name: "警报声"
-    gender: "neutral"
-    age_type: "neutral"
-    personality: ["紧急", "警告"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "外星入侵警报"
+    personality: ["和蔼", "解释", "热情"]
+    tts_voice: "zh_male_wennuanahu_moon_bigtts"
+    description: "动物星球零食店老板，熊"
     
   店长:
     name: "店长"
@@ -376,6 +306,23 @@ other_stories:
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "蛋糕店店员"
     
+  导游兔子:
+    name: "导游兔子"
+    gender: "male"
+    age_type: "adult"
+    personality: ["热情", "介绍", "导游"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "奶油蛋糕王国导游"
+
+  # 服务角色
+  船长:
+    name: "船长"
+    gender: "male"
+    age_type: "adult"
+    personality: ["经验丰富", "友好", "乐于助人"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "轮船船长"
+    
   租车公司:
     name: "租车公司"
     gender: "neutral"
@@ -384,14 +331,6 @@ other_stories:
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "租车公司客服"
     
-  导游兔子:
-    name: "导游兔子"
-    gender: "male"
-    age_type: "adult"
-    personality: ["热情", "介绍", "导游"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "奶油蛋糕王国导游"
-    
   领导:
     name: "领导"
     gender: "male"
@@ -399,15 +338,41 @@ other_stories:
     personality: ["严厉", "责备", "愤怒"]
     tts_voice: "zh_male_guozhoudege_moon_bigtts"
     description: "杰克在SP公司的上司"
+
+  # 群体角色
+  大家:
+    name: "大家"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["紧张", "惊讶"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "动物星球的民众"
     
-  朋友们:
-    name: "朋友们"
+  小动物们:
+    name: "小动物们"
     gender: "mixed"
     age_type: "child"
-    personality: ["羡慕", "赞叹"]
+    personality: ["哭闹", "想要零食", "天真"]
     tts_voice: "zh_female_wanqudashu_moon_bigtts"
-    description: "三只小猪的学校朋友们"
+    description: "动物星球的小动物们"
     
+  妈妈们:
+    name: "妈妈们"
+    gender: "female"
+    age_type: "adult"
+    personality: ["无奈", "安慰孩子", "心疼"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "小动物们的妈妈"
+    
+  零食星球民众:
+    name: "零食星球民众"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["愤怒", "抗议", "被欺骗"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "零食星球的人民"
+
+  # 跨故事角色
   小猪们和波波:
     name: "小猪们和波波"
     gender: "mixed"
@@ -415,8 +380,13 @@ other_stories:
     personality: ["惊讶", "互动"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "三只小猪和奶茶兔波波"
-    
-  # 神奇画笔故事角色
+
+# ==============================
+# 3. 神奇画笔故事系列
+# ==============================
+
+magic_brush_characters:
+  # 主要角色
   罗宾:
     name: "罗宾"
     gender: "male"
@@ -448,14 +418,15 @@ other_stories:
     personality: ["忧郁", "后来变开朗"]
     tts_voice: "zh_female_wanqudashu_moon_bigtts"
     description: "罗宾的妹妹"
-    
-  老奶奶:
-    name: "老奶奶"
+
+  # 时尚设计师
+  安吉尼娜:
+    name: "安吉尼娜"
     gender: "female"
-    age_type: "elderly"
-    personality: ["慈祥", "热情", "传统"]
-    tts_voice: "zh_female_popo_mars_bigtts"
-    description: "黎巴市老餐馆的店主"
+    age_type: "adult"
+    personality: ["时尚", "设计师", "迷失后找回初心"]
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
+    description: "时尚之都的设计师，安吉尼娅的正确拼写"
     
   神秘女士:
     name: "神秘女士"
@@ -465,29 +436,55 @@ other_stories:
     tts_voice: "zh_female_gaolengyujie_moon_bigtts"
     description: "黎巴市餐馆的神秘客人，实际是安吉尼娜"
     
-  门卫:
-    name: "门卫"
-    gender: "male"
-    age_type: "adult"
-    personality: ["职业", "友善"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "安吉尼娜庄园的门卫"
-    
-  安吉尼娜:
-    name: "安吉尼娜"
+  安吉丽娜:
+    name: "安吉丽娜"
     gender: "female"
     age_type: "adult"
-    personality: ["时尚", "设计师", "迷失后找回初心"]
+    personality: ["设计师", "被囚禁", "勇敢"]
     tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "时尚之都的设计师，安吉尼娅的正确拼写"
+    description: "服装设计师，被莱伯特抓住"
+
+  # 画家大师们
+  阿卡西亚:
+    name: "阿卡西亚"
+    gender: "male"
+    age_type: "elderly"
+    personality: ["智慧", "画家大师", "正义"]
+    tts_voice: "ICL_zh_male_youmodaye_tob"
+    description: "传说中的画家大师，神奇画笔拥有者"
     
-  司机师傅:
-    name: "司机师傅"
+  伦勃朗先生:
+    name: "伦勃朗先生"
     gender: "male"
     age_type: "adult"
-    personality: ["经验丰富", "友好"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "北方山区的司机"
+    personality: ["善良", "大画家", "宽容"]
+    tts_voice: "ICL_zh_male_youmodaye_tob"
+    description: "著名画家，阿卡西亚的恩人"
+    
+  昆比:
+    name: "昆比"
+    gender: "male"
+    age_type: "adult"
+    personality: ["神秘", "助人", "穿行能力"]
+    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
+    description: "神奇画笔拥有者，能力是穿行"
+
+  # 反派角色
+  莱伯特:
+    name: "莱伯特"
+    gender: "male"
+    age_type: "adult"
+    personality: ["邪恶", "野心家", "狡猾"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "大坏蛋莱伯特，伦勃朗先生的儿子"
+    
+  假莱伯特:
+    name: "假莱伯特"
+    gender: "male"
+    age_type: "adult"
+    personality: ["画出来的", "假装悔改"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "真莱伯特画出来的假人"
     
   罗杰:
     name: "罗杰"
@@ -504,14 +501,31 @@ other_stories:
     personality: ["紧张", "汇报"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "罗杰的手下"
-    
-  阿卡西亚:
-    name: "阿卡西亚"
-    gender: "male"
+
+  # 配角
+  老奶奶:
+    name: "老奶奶"
+    gender: "female"
     age_type: "elderly"
-    personality: ["智慧", "画家大师", "正义"]
-    tts_voice: "ICL_zh_male_youmodaye_tob"
-    description: "传说中的画家大师，神奇画笔拥有者"
+    personality: ["慈祥", "热情", "传统"]
+    tts_voice: "zh_female_popo_mars_bigtts"
+    description: "黎巴市老餐馆的店主"
+    
+  门卫:
+    name: "门卫"
+    gender: "male"
+    age_type: "adult"
+    personality: ["职业", "友善"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "安吉尼娜庄园的门卫"
+    
+  司机师傅:
+    name: "司机师傅"
+    gender: "male"
+    age_type: "adult"
+    personality: ["经验丰富", "友好"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "北方山区的司机"
     
   警卫:
     name: "警卫"
@@ -520,15 +534,8 @@ other_stories:
     personality: ["职责", "严肃"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "抓住阿卡西亚的警卫"
-    
-  伦勃朗先生:
-    name: "伦勃朗先生"
-    gender: "male"
-    age_type: "adult"
-    personality: ["善良", "大画家", "宽容"]
-    tts_voice: "ICL_zh_male_youmodaye_tob"
-    description: "著名画家，阿卡西亚的恩人"
-    
+
+  # 群体角色
   小混混们:
     name: "小混混们"
     gender: "mixed"
@@ -553,38 +560,6 @@ other_stories:
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "莱伯特控制的巨熊，后来被感化"
     
-  假莱伯特:
-    name: "假莱伯特"
-    gender: "male"
-    age_type: "adult"
-    personality: ["画出来的", "假装悔改"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "真莱伯特画出来的假人"
-    
-  莱伯特:
-    name: "莱伯特"
-    gender: "male"
-    age_type: "adult"
-    personality: ["邪恶", "野心家", "狡猾"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "大坏蛋莱伯特，伦勃朗先生的儿子"
-    
-  安吉丽娜:
-    name: "安吉丽娜"
-    gender: "female"
-    age_type: "adult"
-    personality: ["设计师", "被囚禁", "勇敢"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "服装设计师，被莱伯特抓住"
-    
-  昆比:
-    name: "昆比"
-    gender: "male"
-    age_type: "adult"
-    personality: ["神秘", "助人", "穿行能力"]
-    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
-    description: "神奇画笔拥有者，能力是穿行"
-    
   市民们:
     name: "市民们"
     gender: "mixed"
@@ -592,46 +567,19 @@ other_stories:
     personality: ["愤怒", "勇敢", "反抗"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "海伦市的民众"
-    
-  # 不正常魔法王国角色
-  姑妈:
-    name: "姑妈"
-    gender: "female"
-    age_type: "adult"
-    personality: ["热情", "医生", "关爱"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "三只小猪的姑妈，医生"
-    
-  姑爹:
-    name: "姑爹"
-    gender: "male"
-    age_type: "adult"
-    personality: ["医生", "警告"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "三只小猪的姑爹，医生"
-    
-  姑父:
-    name: "姑父"
-    gender: "male"
-    age_type: "adult"
-    personality: ["医生", "警告"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "三只小猪的姑父，医生"
-    
-  姑姑:
-    name: "姑姑"
-    gender: "female"
-    age_type: "adult"
-    personality: ["严厉", "护短"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "三只小猪的姑姑"
-    
+
+# ==============================
+# 4. 不正常魔法王国故事系列
+# ==============================
+
+magic_kingdom_characters:
+  # 主要角色
   桃桃:
     name: "桃桃"
     gender: "female"
     age_type: "child"
     personality: ["活泼", "种花", "植物魔法"]
-    tts_voice: "zh_female_wanqudashu_moon_bigtts"
+    tts_voice: "zh_female_yuanqinvyou_moon_bigtts"
     description: "花田里的小猪，拥有植物对话魔法杖"
     
   大壮:
@@ -641,38 +589,6 @@ other_stories:
     personality: ["胆小", "被变成老虎", "善良"]
     tts_voice: "zh_male_xionger_mars_bigtts"
     description: "被魔法变成老虎的小猪"
-    
-  熊:
-    name: "熊"
-    gender: "male"
-    age_type: "adult"
-    personality: ["守护", "简单", "被感化"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "山洞里守护魔法杖的熊"
-    
-  漂流瓶:
-    name: "漂流瓶"
-    gender: "neutral"
-    age_type: "adult"
-    personality: ["飞行", "被臭气充满"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "充气式飞行器"
-    
-  龙:
-    name: "龙"
-    gender: "male"
-    age_type: "adult"
-    personality: ["愚钝", "健忘", "后来变聪明"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "被变成河的老虎，偶尔能变成龙"
-    
-  敖锐:
-    name: "敖锐"
-    gender: "male"
-    age_type: "adult"
-    personality: ["聪明", "感恩", "帮助他人"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "恢复智慧的龙，原本是老虎"
     
   桃桃的叔叔:
     name: "桃桃的叔叔"
@@ -697,14 +613,31 @@ other_stories:
     personality: ["思念", "关爱儿子"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "大壮的父亲"
-    
-  地洞里的猪们:
-    name: "地洞里的猪们"
-    gender: "mixed"
-    age_type: "mixed"
-    personality: ["躲藏", "后来感激"]
+
+  # 魔法生物
+  熊:
+    name: "熊"
+    gender: "male"
+    age_type: "adult"
+    personality: ["守护", "简单", "被感化"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "永夜森林地下的猪族群"
+    description: "山洞里守护魔法杖的熊"
+    
+  龙:
+    name: "龙"
+    gender: "male"
+    age_type: "adult"
+    personality: ["愚钝", "健忘", "后来变聪明"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "被变成河的老虎，偶尔能变成龙"
+    
+  敖锐:
+    name: "敖锐"
+    gender: "male"
+    age_type: "adult"
+    personality: ["聪明", "感恩", "帮助他人"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "恢复智慧的龙，原本是老虎"
     
   一号头:
     name: "一号头"
@@ -729,7 +662,8 @@ other_stories:
     personality: ["暴躁", "后来变温和"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "三头鸟的暴躁脑袋"
-    
+
+  # 魔法师和魔法设施
   不正常魔法师:
     name: "不正常魔法师"
     gender: "male"
@@ -746,8 +680,28 @@ other_stories:
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "会说话的魔法塔"
     
-  # 音乐之神故事的各国角色
-  
+  漂流瓶:
+    name: "漂流瓶"
+    gender: "neutral"
+    age_type: "adult"
+    personality: ["飞行", "被臭气充满"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "充气式飞行器"
+
+  # 群体角色
+  地洞里的猪们:
+    name: "地洞里的猪们"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["躲藏", "后来感激"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "永夜森林地下的猪族群"
+
+# ==============================
+# 5. 音乐之神故事系列（各大陆）
+# ==============================
+
+music_god_characters:
   # 第2章 - 阿坎大陆
   哈尔:
     name: "哈尔"
@@ -895,186 +849,7 @@ other_stories:
     age_type: "young_adult"
     personality: ["勇敢"]
     tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "向儒父亲，为国捐躯 "
-    
-# 月亮和星星的王国 - 新角色
-moon_star_kingdom:
-  卫兵:
-    name: "卫兵"
-    gender: "male"
-    age_type: "adult"
-    personality: ["严肃", "尽职", "严格"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "繁星城图书馆门口的卫兵"
-    
-  伊莎:
-    name: "伊莎"
-    gender: "female"
-    age_type: "young_adult"
-    personality: ["聪慧", "勇敢", "善良", "有正义感"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "繁星公主，金发，对历史和宇宙奥秘有深刻了解"
-    
-  索尔:
-    name: "索尔"
-    gender: "male"
-    age_type: "adult"
-    personality: ["忠诚", "机智", "隐秘", "敏捷"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "伊莎公主的密探，擅长潜伏和收集情报"
-    
-  送饭人:
-    name: "送饭人"
-    gender: "male"
-    age_type: "adult"
-    personality: ["小心", "谨慎"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "被索尔收买的送饭人员"
-    
-  仆人:
-    name: "仆人"
-    gender: "male"
-    age_type: "adult"
-    personality: ["恭敬", "紧张"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞家族的仆人"
-    
-  卡尔:
-    name: "卡尔"
-    gender: "male"
-    age_type: "young_adult"
-    personality: ["看似天真", "实则心机深沉", "野心勃勃"]
-    tts_voice: "ICL_zh_male_shuaizhenxiaohuo_tob"
-    description: "二王子，表面爱玩实际有政治野心"
-    
-  老奶奶:
-    name: "老奶奶"
-    gender: "female"
-    age_type: "elderly"
-    personality: ["虚弱", "配合演出"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "配合演出的老演员"
-    
-  达洛:
-    name: "达洛"
-    gender: "male"
-    age_type: "young_adult"
-    personality: ["表面贪吃", "实际心机深沉", "贪婪", "腐败"]
-    tts_voice: "zh_male_guozhoudege_moon_bigtts"
-    description: "大王子，王储，表面憨厚实际阴险"
-    
-  国王:
-    name: "国王"
-    gender: "male"
-    age_type: "middle_aged"
-    personality: ["威严", "不怒自威", "严厉"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "月亮和星星王国的国王"
-    
-  知情人:
-    name: "知情人"
-    gender: "male"
-    age_type: "adult"
-    personality: ["恐惧", "被迫", "配合"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞长老安排的假证人"
-    
-  管家:
-    name: "管家"
-    gender: "male"
-    age_type: "adult"
-    personality: ["慌张", "紧张", "报告消息"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞家族的管家"
-    
-  平民甲:
-    name: "平民甲"
-    gender: "male"
-    age_type: "adult"
-    personality: ["疑惑", "期待"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民乙:
-    name: "平民乙"
-    gender: "male"
-    age_type: "adult"
-    personality: ["好奇", "期盼"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民丙:
-    name: "平民丙"
-    gender: "female"
-    age_type: "adult"
-    personality: ["惊讶", "激动"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民丁:
-    name: "平民丁"
-    gender: "male"
-    age_type: "adult"
-    personality: ["疑惑", "好奇"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民戊:
-    name: "平民戊"
-    gender: "female"
-    age_type: "adult"
-    personality: ["好奇", "疑惑"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民己:
-    name: "平民己"
-    gender: "male"
-    age_type: "adult"
-    personality: ["惊讶", "崇拜"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  平民庚:
-    name: "平民庚"
-    gender: "male"
-    age_type: "adult"
-    personality: ["谨慎", "求证"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会集会上的平民"
-    
-  蒙面女子:
-    name: "蒙面女子"
-    gender: "female"
-    age_type: "young_adult"
-    personality: ["神秘", "沉稳", "有力量"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "伊索的神秘身份，实际上是佐伊"
-    
-  伊索:
-    name: "伊索"
-    gender: "female"
-    age_type: "young_adult"
-    personality: ["神秘", "慈悲", "智慧", "领袖气质"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "星月会圣女，佐伊的化身"
-    
-  群众:
-    name: "群众"
-    gender: "mixed"
-    age_type: "adult"
-    personality: ["激动", "狂热", "支持"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "星月会的支持者群体"
-    
-  叛军首领:
-    name: "叛军首领"
-    gender: "male"
-    age_type: "adult"
-    personality: ["冷酷", "服从", "军人作风"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "班瑞家族私兵的首领"
-
+    description: "向儒父亲，为国捐躯"
     
   李老爷爷:
     name: "李老爷爷"
@@ -1173,25 +948,13 @@ moon_star_kingdom:
     personality: ["神圣", "音乐女神"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "慕斯国的音乐女神"
-    
-  # 知识王国角色
-  智慧长老:
-    name: "智慧长老"
-    gender: "male"
-    age_type: "elderly"
-    personality: ["博学", "智慧"]
-    tts_voice: "ICL_zh_male_youmodaye_tob"
-    description: "知识王国的长老"
-    
-  圆规先生:
-    name: "圆规先生"
-    gender: "male"
-    age_type: "adult"
-    personality: ["机械", "数学化身"]
-    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
-    description: "数学王国的圆规化身"
-    
-  # 月亮星星王国角色
+
+# ==============================
+# 6. 月亮和星星的王国故事系列
+# ==============================
+
+moon_star_kingdom:
+  # 主要角色
   佐伊:
     name: "佐伊"
     gender: "female"
@@ -1199,6 +962,22 @@ moon_star_kingdom:
     personality: ["好学", "勇敢"]
     tts_voice: "zh_female_wanqudashu_moon_bigtts"
     description: "落星城的小女孩"
+    
+  伊莎:
+    name: "伊莎"
+    gender: "female"
+    age_type: "young_adult"
+    personality: ["聪慧", "勇敢", "善良", "有正义感"]
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
+    description: "繁星公主，金发，对历史和宇宙奥秘有深刻了解"
+    
+  繁星公主:
+    name: "繁星公主"
+    gender: "female"
+    age_type: "young_adult"
+    personality: ["高贵", "善良"]
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
+    description: "星月王国的公主"
     
   里德尔:
     name: "里德尔"
@@ -1212,159 +991,143 @@ moon_star_kingdom:
     name: "汤姆老师"
     gender: "male"
     age_type: "adult"
-    personality: ["严肃", "老师"]
-    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
-    description: "佐伊的老师"
+    personality: ["善良", "智慧", "数学家"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "佐伊的养父，数学老师，里德尔的大弟子"
+
+  # 王室成员
+  国王:
+    name: "国王"
+    gender: "male"
+    age_type: "middle_aged"
+    personality: ["威严", "不怒自威", "严厉"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "月亮和星星王国的国王"
     
-  繁星公主:
-    name: "繁星公主"
-    gender: "female"
+  达洛:
+    name: "达洛"
+    gender: "male"
     age_type: "young_adult"
-    personality: ["高贵", "善良"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "星月王国的公主"
-    
-  伊莎:
-    name: "伊莎"
-    gender: "female"
-    age_type: "adult"
-    personality: ["聪明", "野心勃勃"]
-    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
-    description: "繁星公主的谋士"
+    personality: ["表面贪吃", "实际心机深沉", "贪婪", "腐败"]
+    tts_voice: "zh_male_guozhoudege_moon_bigtts"
+    description: "大王子，王储，表面憨厚实际阴险"
     
   卡尔:
     name: "卡尔"
     gender: "male"
-    age_type: "adult"
-    personality: ["忠诚", "护卫"]
-    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
-    description: "繁星公主的护卫"
-    
-  国王:
-    name: "国王"
-    gender: "male"
-    age_type: "adult"
-    personality: ["威严", "统治者"]
-    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
-    description: "星月王国的国王"
-
-# TTS配置说明
-tts_config:
-  default_speed: 1.0
-  default_volume: 1.0
-  default_pitch: 1.0
-  output_format: "mp3"
-  
-  # 角色类型对应的默认音色
-  voice_mapping:
-    adult_male: "BV001_streaming"
-    adult_female: "BV002_streaming"
-    elderly_male: "BV003_streaming"
-    elderly_female: "BV025_streaming"
-    child_male: "BV004_streaming"
-    child_female: "BV026_streaming"
-    divine: "BV009_streaming"
-    narrator: "BV015_streaming"
-    
-    
-  # 校园里的知识王国 - 新增角色
-  图灵:
-    name: "图灵"
-    gender: "male"
-    age_type: "adult"
-    personality: ["智慧", "计算机科学家", "创新"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "计算机之父，发明游戏帮助治愈内卷病毒"
-    
-  妈妈:
-    name: "妈妈"
-    gender: "female" 
-    age_type: "adult"
-    personality: ["温柔", "耐心", "关爱"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "游戏中小宝的妈妈"
-    
-  爸爸:
-    name: "爸爸"
-    gender: "male"
-    age_type: "adult"
-    personality: ["智慧", "哲理", "引导"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "游戏中小宝的爸爸"
-    
-  学生甲:
-    name: "学生甲"
-    gender: "male"
     age_type: "young_adult"
-    personality: ["抱怨", "焦虑"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "对学习效果不满意的学生"
+    personality: ["看似天真", "实则心机深沉", "野心勃勃"]
+    tts_voice: "ICL_zh_male_shuaizhenxiaohuo_tob"
+    description: "二王子，表面爱玩实际有政治野心"
+
+  # 索尔相关
+  索尔:
+    name: "索尔"
+    gender: "male"
+    age_type: "adult"
+    personality: ["忠诚", "机智", "隐秘", "敏捷"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "伊莎公主的密探，擅长潜伏和收集情报"
     
-  学生乙:
-    name: "学生乙"
+  送饭人:
+    name: "送饭人"
+    gender: "male"
+    age_type: "adult"
+    personality: ["小心", "谨慎"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "被索尔收买的送饭人员"
+
+  # 班瑞家族
+  班瑞长老:
+    name: "班瑞长老"
+    gender: "male"
+    age_type: "elderly"
+    personality: ["威严", "正式", "家族领袖"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞家族族长，主持紫星授予仪式"
+    
+  仆人:
+    name: "仆人"
+    gender: "male"
+    age_type: "adult"
+    personality: ["恭敬", "紧张"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞家族的仆人"
+    
+  管家:
+    name: "管家"
+    gender: "male"
+    age_type: "adult"
+    personality: ["慌张", "紧张", "报告消息"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞家族的管家"
+    
+  知情人:
+    name: "知情人"
+    gender: "male"
+    age_type: "adult"
+    personality: ["恐惧", "被迫", "配合"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞长老安排的假证人"
+    
+  工作人员:
+    name: "工作人员"
+    gender: "male"
+    age_type: "adult"
+    personality: ["专业", "激动", "同情"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞家族的兑奖工作人员"
+    
+  保安队长:
+    name: "保安队长"
+    gender: "male"
+    age_type: "adult"
+    personality: ["专业", "保护"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "班瑞家族保安队长"
+    
+  霍尔:
+    name: "霍尔"
+    gender: "male"
+    age_type: "adult"
+    personality: ["彬彬有礼", "专业管家", "服务周到"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "佐伊的专属管家"
+
+  # 星月会
+  蒙面女子:
+    name: "蒙面女子"
     gender: "female"
     age_type: "young_adult"
-    personality: ["抱怨", "焦虑"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "对学习效果不满意的学生"
+    personality: ["神秘", "沉稳", "有力量"]
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
+    description: "伊索的神秘身份，实际上是佐伊"
     
-  理科学生头目:
-    name: "理科学生头目"
-    gender: "male"
+  伊索:
+    name: "伊索"
+    gender: "female"
     age_type: "young_adult"
-    personality: ["激进", "好斗", "偏激"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "理科阵营的激进分子"
+    personality: ["神秘", "慈悲", "智慧", "领袖气质"]
+    tts_voice: "zh_female_gaolengyujie_moon_bigtts"
+    description: "星月会圣女，佐伊的化身"
     
-  文科学生头目:
-    name: "文科学生头目"
-    gender: "male"
-    age_type: "young_adult"
-    personality: ["激进", "好斗", "偏激"]
+  群众:
+    name: "群众"
+    gender: "mixed"
+    age_type: "adult"
+    personality: ["激动", "狂热", "支持"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "文科阵营的激进分子"
+    description: "星月会的支持者群体"
     
-  社会学家:
-    name: "社会学家"
+  叛军首领:
+    name: "叛军首领"
     gender: "male"
     age_type: "adult"
-    personality: ["理性", "分析", "智慧"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "分析群体裹挟现象的专家"
-    
-  理科生们:
-    name: "理科生们"
-    gender: "mixed"
-    age_type: "young_adult"
-    personality: ["集体", "偏激"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "理科阵营的学生们"
-    
-  文科生们:
-    name: "文科生们"
-    gender: "mixed"
-    age_type: "young_adult"
-    personality: ["集体", "偏激"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "文科阵营的学生们"
-    
-  学生:
-    name: "学生"
-    gender: "mixed"
-    age_type: "young_adult"
-    personality: ["观察", "思考"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "观看表演的学生"
-    
-  孩子:
-    name: "孩子"
-    gender: "mixed"
-    age_type: "child"
-    personality: ["独立", "理性"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "不再内卷的孩子"
-    
-  # 月亮和星星的王国 - 新增角色
+    personality: ["冷酷", "服从", "军人作风"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "班瑞家族私兵的首领"
+
+  # 教育相关
   数学老师:
     name: "数学老师"
     gender: "male"
@@ -1412,6 +1175,72 @@ tts_config:
     personality: ["羡慕", "佩服"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "佐伊的同学们"
+
+  # 平民角色
+  平民甲:
+    name: "平民甲"
+    gender: "male"
+    age_type: "adult"
+    personality: ["疑惑", "期待"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民乙:
+    name: "平民乙"
+    gender: "male"
+    age_type: "adult"
+    personality: ["好奇", "期盼"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民丙:
+    name: "平民丙"
+    gender: "female"
+    age_type: "adult"
+    personality: ["惊讶", "激动"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民丁:
+    name: "平民丁"
+    gender: "male"
+    age_type: "adult"
+    personality: ["疑惑", "好奇"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民戊:
+    name: "平民戊"
+    gender: "female"
+    age_type: "adult"
+    personality: ["好奇", "疑惑"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民己:
+    name: "平民己"
+    gender: "male"
+    age_type: "adult"
+    personality: ["惊讶", "崇拜"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+    
+  平民庚:
+    name: "平民庚"
+    gender: "male"
+    age_type: "adult"
+    personality: ["谨慎", "求证"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "星月会集会上的平民"
+
+  # 服务人员
+  卫兵:
+    name: "卫兵"
+    gender: "male"
+    age_type: "adult"
+    personality: ["严肃", "尽职", "严格"]
+    tts_voice: "zh_male_dongfanghaoran_moon_bigtts"
+    description: "繁星城图书馆门口的卫兵"
     
   售票员:
     name: "售票员"
@@ -1436,22 +1265,6 @@ tts_config:
     personality: ["和善", "博学", "消息灵通"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "伽利略观星殿的店长"
-    
-  汤姆老师:
-    name: "汤姆老师"
-    gender: "male"
-    age_type: "adult"
-    personality: ["善良", "智慧", "数学家"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "佐伊的养父，数学老师，里德尔的大弟子"
-    
-  佐伊和小宝:
-    name: "佐伊和小宝"
-    gender: "mixed"
-    age_type: "child"
-    personality: ["惊讶", "团结"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "佐伊和小宝两人一起说话"
     
   护卫:
     name: "护卫"
@@ -1485,14 +1298,6 @@ tts_config:
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "怀疑佐伊中奖的围观者"
     
-  工作人员:
-    name: "工作人员"
-    gender: "male"
-    age_type: "adult"
-    personality: ["专业", "激动", "同情"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞家族的兑奖工作人员"
-    
   保安:
     name: "保安"
     gender: "male"
@@ -1500,42 +1305,270 @@ tts_config:
     personality: ["维持秩序", "职责"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
     description: "维持秩序的保安"
+
+  # 老年角色
+  老奶奶:
+    name: "老奶奶"
+    gender: "female"
+    age_type: "elderly"
+    personality: ["虚弱", "配合演出"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "配合演出的老演员"
+
+  # 跨故事角色
+  佐伊和小宝:
+    name: "佐伊和小宝"
+    gender: "mixed"
+    age_type: "child"
+    personality: ["惊讶", "团结"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "佐伊和小宝两人一起说话"
+
+# ==============================
+# 7. 知识王国/校园故事系列
+# ==============================
+
+knowledge_kingdom_characters:
+  # 主要角色
+  图灵:
+    name: "图灵"
+    gender: "male"
+    age_type: "adult"
+    personality: ["智慧", "计算机科学家", "创新"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "计算机之父，发明游戏帮助治愈内卷病毒"
     
-  班瑞长老:
-    name: "班瑞长老"
+  智慧长老:
+    name: "智慧长老"
     gender: "male"
     age_type: "elderly"
-    personality: ["威严", "正式", "家族领袖"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞家族族长，主持紫星授予仪式"
+    personality: ["博学", "智慧"]
+    tts_voice: "ICL_zh_male_youmodaye_tob"
+    description: "知识王国的长老"
     
-  保安队长:
-    name: "保安队长"
+  圆规先生:
+    name: "圆规先生"
     gender: "male"
     age_type: "adult"
-    personality: ["专业", "保护"]
-    tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "班瑞家族保安队长"
+    personality: ["机械", "数学化身"]
+    tts_voice: "zh_male_yuanboxiaoshu_moon_bigtts"
+    description: "数学王国的圆规化身"
     
-  霍尔:
-    name: "霍尔"
+  社会学家:
+    name: "社会学家"
     gender: "male"
     age_type: "adult"
-    personality: ["彬彬有礼", "专业管家", "服务周到"]
+    personality: ["理性", "分析", "智慧"]
     tts_voice: "zh_female_shaoergushi_mars_bigtts"
-    description: "佐伊的专属管家"
+    description: "分析群体裹挟现象的专家"
+
+  # 家庭角色（游戏中的）
+  妈妈:
+    name: "妈妈"
+    gender: "female" 
+    age_type: "adult"
+    personality: ["温柔", "耐心", "关爱"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "游戏中小宝的妈妈"
+    
+  爸爸:
+    name: "爸爸"
+    gender: "male"
+    age_type: "adult"
+    personality: ["智慧", "哲理", "引导"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "游戏中小宝的爸爸"
+
+  # 学生角色
+  学生甲:
+    name: "学生甲"
+    gender: "male"
+    age_type: "young_adult"
+    personality: ["抱怨", "焦虑"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "对学习效果不满意的学生"
+    
+  学生乙:
+    name: "学生乙"
+    gender: "female"
+    age_type: "young_adult"
+    personality: ["抱怨", "焦虑"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "对学习效果不满意的学生"
+    
+  理科学生头目:
+    name: "理科学生头目"
+    gender: "male"
+    age_type: "young_adult"
+    personality: ["激进", "好斗", "偏激"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "理科阵营的激进分子"
+    
+  文科学生头目:
+    name: "文科学生头目"
+    gender: "male"
+    age_type: "young_adult"
+    personality: ["激进", "好斗", "偏激"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "文科阵营的激进分子"
+    
+  理科生们:
+    name: "理科生们"
+    gender: "mixed"
+    age_type: "young_adult"
+    personality: ["集体", "偏激"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "理科阵营的学生们"
+    
+  文科生们:
+    name: "文科生们"
+    gender: "mixed"
+    age_type: "young_adult"
+    personality: ["集体", "偏激"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "文科阵营的学生们"
+    
+  学生:
+    name: "学生"
+    gender: "mixed"
+    age_type: "young_adult"
+    personality: ["观察", "思考"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "观看表演的学生"
+    
+  孩子:
+    name: "孩子"
+    gender: "mixed"
+    age_type: "child"
+    personality: ["独立", "理性"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "不再内卷的孩子"
+
+# ==============================
+# 8. 通用角色（多个故事共用）
+# ==============================
+
+# 群体角色
+group_characters:
+  观众们:
+    name: "观众们"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["热闹", "议论纷纷"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "祭典现场的观众"
+    
+  观众:
+    name: "观众"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["赞赏", "被音乐感动"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "酒吧和演出的观众"
+    
+  听众们:
+    name: "听众们"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["被感动", "寻求慰藉"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "赫巴音乐的听众"
+    
+  教会:
+    name: "教会"
+    gender: "mixed"
+    age_type: "mixed"
+    personality: ["权威", "传统", "严厉"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "地利国教会代表"
+    
+  评论家们:
+    name: "评论家们"
+    gender: "mixed"
+    age_type: "adult"
+    personality: ["专业", "批评", "赞赏"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "民新国音乐评论家"
+
+# 新闻媒体
+media_characters:
+  新闻播报员:
+    name: "新闻播报员"
+    gender: "female"
+    age_type: "adult"
+    personality: ["专业", "播报新闻"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "电视新闻播报员"
+    
+  电视新闻:
+    name: "电视新闻"
+    gender: "neutral"
+    age_type: "adult"
+    personality: ["客观", "播报"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "慕斯国电视新闻"
+    
+  动物星球广播:
+    name: "动物星球广播"
+    gender: "neutral"
+    age_type: "adult"
+    personality: ["宣告", "正式", "战争"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "动物星球官方广播"
+
+# 特殊效果
+special_effects:
+  警报声:
+    name: "警报声"
+    gender: "neutral"
+    age_type: "neutral"
+    personality: ["紧急", "警告"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "外星入侵警报"
+
+# 旁白角色
+narrator:
+  旁白:
+    name: "旁白"
+    gender: "neutral"
+    age_type: "narrator"
+    personality: ["客观", "叙述性", "引导性"]
+    tts_voice: "zh_female_shaoergushi_mars_bigtts"
+    description: "故事叙述者"
+
+# ==============================
+# TTS配置
+# ==============================
+
+# TTS基础配置
+tts_config:
+  default_speed: 1.0
+  default_volume: 1.0
+  default_pitch: 1.0
+  output_format: "mp3"
+  
+  # 角色类型对应的默认音色
+  voice_mapping:
+    adult_male: "BV001_streaming"
+    adult_female: "BV002_streaming"
+    elderly_male: "BV003_streaming"
+    elderly_female: "BV025_streaming"
+    child_male: "BV004_streaming"
+    child_female: "BV026_streaming"
+    divine: "BV009_streaming"
+    narrator: "BV015_streaming"
 
 # 特殊效果配置
-  special_effects:
-    angry: 
-      speed: 1.2
-      pitch: 1.1
-    sad:
-      speed: 0.8
-      pitch: 0.9
-    excited:
-      speed: 1.3
-      pitch: 1.2
-    whisper:
-      volume: 0.6
-      speed: 0.9
+special_effects:
+  angry: 
+    speed: 1.2
+    pitch: 1.1
+  sad:
+    speed: 0.8
+    pitch: 0.9
+  excited:
+    speed: 1.3
+    pitch: 1.2
+  whisper:
+    volume: 0.6
+    speed: 0.9
